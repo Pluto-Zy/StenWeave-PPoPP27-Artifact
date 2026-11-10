@@ -1,0 +1,9 @@
+--- a/3dstencil/j3d.cu
++++ b/3dstencil/j3d.cu
+@@ -83,5 +83,5 @@
+   int smrange = (quesize<HALO, curshape>::smque) * TSTEP + (curshape==1);
+   // int smrange = (HALO+1) * TSTEP + 1;
+-  int basic_sm_space = ((TILE_Y + 2 * HALO) * (TILE_X + HALO * 2) * smrange )* sizeof(REAL);
++  int basic_sm_space = ((TILE_Y + 2 * HALO) * (TILE_X + HALO * 2) * smrange )* sizeof(REAL) + sizeof(REAL);
+ 
+   executeSM = basic_sm_space;

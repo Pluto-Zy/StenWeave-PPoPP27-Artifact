@@ -1,0 +1,109 @@
+# Frozen FP64 variants selected by offline measurement.
+arch = "sm80"
+steps = 1000
+repeats = 5
+statistic = "mean_sample_throughput"
+
+[stencils.box2d1r]
+variant = "box2d1r-512-16-256"
+dim = 2
+radius = 1
+bs1 = 512
+bt = 16
+sl = 256
+maxrregcount = 128
+width = 16384
+
+[stencils.box2d2r]
+variant = "box2d2r-256-5-512"
+dim = 2
+radius = 2
+bs1 = 256
+bt = 5
+sl = 512
+maxrregcount = 0
+width = 16384
+
+[stencils.box2d3r]
+variant = "box2d3r-128-2-128"
+dim = 2
+radius = 3
+bs1 = 128
+bt = 2
+sl = 128
+maxrregcount = 0
+width = 16384
+
+[stencils.box3d1r]
+variant = "box3d1r-32x16-3-128"
+dim = 3
+radius = 1
+bs1 = 32
+bs2 = 16
+bt = 3
+sl = 128
+maxrregcount = 0
+width = 512
+
+[stencils.star2d1r]
+variant = "star2d1r-256-10-256"
+dim = 2
+radius = 1
+bs1 = 256
+bt = 10
+sl = 256
+maxrregcount = 0
+width = 16384
+
+[stencils.star2d2r]
+variant = "star2d2r-256-5-256"
+dim = 2
+radius = 2
+bs1 = 256
+bt = 5
+sl = 256
+maxrregcount = 0
+width = 16384
+
+[stencils.star2d3r]
+variant = "star2d3r-512-7-256"
+dim = 2
+radius = 3
+bs1 = 512
+bt = 7
+sl = 256
+maxrregcount = 0
+width = 16384
+
+[stencils.star3d1r]
+variant = "star3d1r-32x32-4-128"
+dim = 3
+radius = 1
+bs1 = 32
+bs2 = 32
+bt = 4
+sl = 128
+maxrregcount = 0
+width = 512
+
+[stencils.star3d2r]
+variant = "star3d2r-32x32-2-128"
+dim = 3
+radius = 2
+bs1 = 32
+bs2 = 32
+bt = 2
+sl = 128
+maxrregcount = 0
+width = 512
+
+[stencils.star3d3r]
+variant = "star3d3r-32x32-1-128"
+dim = 3
+radius = 3
+bs1 = 32
+bs2 = 32
+bt = 1
+sl = 128
+maxrregcount = 0
+width = 512

@@ -1,0 +1,540 @@
+schema_version = 2
+
+[artifact]
+name = "ppopp27-benchmark"
+
+[[kernels]]
+backend = "cuda"
+shape = "star"
+dimensions = 2
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 11
+minimum_overlap = 22
+launch_bounds = 768
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 10
+minimum_overlap = 40
+launch_bounds = 512
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 6
+minimum_overlap = 36
+launch_bounds = 512
+
+[[kernels]]
+backend = "cuda"
+shape = "star"
+dimensions = 2
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 16
+minimum_overlap = 32
+launch_bounds = 480
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 11
+minimum_overlap = 44
+launch_bounds = 512
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 7
+minimum_overlap = 42
+launch_bounds = 512
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 2
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 11
+minimum_overlap = 22
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 13
+minimum_overlap = 30
+group_size = 3
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 10
+minimum_overlap = 40
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 7
+minimum_overlap = 28
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 6
+minimum_overlap = 36
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 5
+minimum_overlap = 32
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 2
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 16
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 20
+minimum_overlap = 40
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 11
+minimum_overlap = 44
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 11
+minimum_overlap = 44
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 7
+minimum_overlap = 42
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 8
+minimum_overlap = 48
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels]]
+backend = "cuda"
+shape = "star"
+dimensions = 3
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+launch_bounds = 1024
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 2
+minimum_overlap = { x = 8, y = 8 }
+launch_bounds = 1024
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 2
+minimum_overlap = { x = 12, y = 12 }
+launch_bounds = 1024
+
+[[kernels]]
+backend = "cuda"
+shape = "star"
+dimensions = 3
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+launch_bounds = 1024
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 2
+minimum_overlap = { x = 8, y = 8 }
+launch_bounds = 1024
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 2
+minimum_overlap = { x = 12, y = 12 }
+launch_bounds = 1024
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 3
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 2
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 3
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 2
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 2
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 3
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 6
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 2, y = 3 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 2
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 3
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 2
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 2
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 2
+
+[[kernels]]
+backend = "cuda"
+shape = "box"
+dimensions = 2
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 8
+minimum_overlap = 16
+launch_bounds = 768
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 4
+minimum_overlap = 16
+launch_bounds = 1024
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 3
+minimum_overlap = 18
+launch_bounds = 1024
+
+[[kernels]]
+backend = "cuda"
+shape = "box"
+dimensions = 2
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 14
+minimum_overlap = 28
+launch_bounds = 512
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 9
+minimum_overlap = 36
+launch_bounds = 512
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 6
+minimum_overlap = 36
+launch_bounds = 512
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 2
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 8
+minimum_overlap = 16
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 9
+minimum_overlap = 20
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 4
+minimum_overlap = 16
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 3
+minimum_overlap = 12
+group_size = 3
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 3
+minimum_overlap = 18
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 2
+minimum_overlap = 12
+group_size = 3
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 2
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 14
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 14
+minimum_overlap = 28
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 9
+minimum_overlap = 36
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 2
+time_block_size = 8
+minimum_overlap = 32
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 6
+minimum_overlap = 36
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 3
+time_block_size = 6
+minimum_overlap = 36
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels]]
+backend = "cuda"
+shape = "box"
+dimensions = 3
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+launch_bounds = 1024
+
+[[kernels]]
+backend = "cuda"
+shape = "box"
+dimensions = 3
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = { x = 6, y = 6 }
+launch_bounds = 1024
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 3
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 3
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = { x = 6, y = 6 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 1

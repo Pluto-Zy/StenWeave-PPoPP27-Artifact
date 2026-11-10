@@ -1,0 +1,15 @@
+# Local build products, runs, and generated result tables.
+/build/
+/runs/
+/figures/
+
+# Python caches.
+__pycache__/
+*.py[cod]
+
+# Local environments and editor files.
+/.venv/
+.DS_Store
+*.swp
+*.swo
+*~

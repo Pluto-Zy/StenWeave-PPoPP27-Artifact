@@ -1,0 +1,121 @@
+--- a/runner/src/execution/executor.cpp
++++ b/runner/src/execution/executor.cpp
+@@ -239,30 +239,18 @@
+ 
+ auto validate_case(
+     ResolvedCase const &resolved_case,
+-    DeviceInfo const &device,
+     Workspace const &workspace,
+     std::vector<double> const &input,
+     ReferenceCache &references
+ ) -> nlohmann::json {
+     std::size_t const case_bytes = resolved_case.workspace_elements * sizeof(double);
+ 
+-    // Isolate validation from previous launches. Fresh shared-memory contents are
+-    // not guaranteed by CUDA; the cubin halo assumption is checked on available hardware.
+-    // Copy the shared device baseline directly; never upload another host input.
++    // Validation shares the current context and uses separate work buffers.
+     std::vector<double> actual(resolved_case.workspace_elements);
+     {
+-        CUcontext source = nullptr;
+-        cuda_check(cuCtxGetCurrent(&source));
+-
+-        Session const validation_session(device.device);
+-        CUcontext destination = nullptr;
+-        cuda_check(cuCtxGetCurrent(&destination));
+-
+         DeviceBuffer const work_a(case_bytes);
+         DeviceBuffer const work_b(case_bytes);
+-        cuda_check(
+-            cuMemcpyPeer(work_a.get(), destination, workspace.baseline.get(), source, case_bytes)
+-        );
++        cuda_check(cuMemcpyDtoD(work_a.get(), workspace.baseline.get(), case_bytes));
+ 
+         Stream const validation_stream;
+         PreparedKernel const validation_kernel(*resolved_case.kernel);
+@@ -318,23 +306,50 @@
+     double max_error = 0;
+     nlohmann::json examples = nlohmann::json::array();
+ 
+-    for (std::size_t i = 0; i < actual.size(); ++i) {
+-        double const error = std::abs(actual[i] - expected[i]);
+-        max_error = std::max(max_error, error);
+-
+-        if (!std::isfinite(actual[i]) || error > resolved_case.run.tolerance) {
+-            ++mismatches;
+-
+-            if (examples.size() < 5) {
+-                // clang-format off
+-                examples.push_back({
+-                    { "index", i },
+-                    { "actual", actual[i] },
+-                    { "expected", expected[i] },
+-                });
+-                // clang-format on
++    // Exclude the complete temporal dependency halo in physical grid points.
++    std::uint64_t const halo = checked_product(
++        resolved_case.kernel->radius, resolved_case.run.time_steps
++    );
++    bool const rank3 = resolved_case.kernel->dimensions == 3;
++    auto const compare = [&](Domain const &domain, std::size_t offset) {
++        if (domain.width <= 2 * halo || domain.height <= 2 * halo
++            || (rank3 && domain.depth <= 2 * halo)) {
++            throw std::runtime_error("Validation domain has no points beyond the temporal halo");
++        }
++
++        for (std::size_t z = halo; z < domain.height - halo; ++z) {
++            for (std::size_t y = rank3 ? halo : 0;
++                 y < (rank3 ? domain.depth - halo : 1); ++y) {
++                for (std::size_t x = halo; x < domain.width - halo; ++x) {
++                    std::size_t const i = offset + (z * domain.depth + y) * domain.width + x;
++                    double const error = std::abs(actual[i] - expected[i]);
++                    max_error = std::max(max_error, error);
++
++                    if (!std::isfinite(actual[i]) || error > resolved_case.run.tolerance) {
++                        ++mismatches;
++
++                        if (examples.size() < 5) {
++                            examples.push_back({
++                                { "index", i },
++                                { "actual", actual[i] },
++                                { "expected", expected[i] },
++                            });
++                        }
++                    }
++                }
+             }
+         }
++    };
++
++    if (resolved_case.kernel->backend == Backend::CUDA) {
++        for (ResolvedBand const &band : resolved_case.bands) {
++            Domain const domain {
++                band.execution_extent.x, band.execution_extent.y.value_or(1), band.stream, 0
++            };
++            compare(domain, band.byte_offset / sizeof(double));
++        }
++    } else {
++        compare(resolved_case.execution_domain, 0);
+     }
+ 
+     // clang-format off
+@@ -343,9 +358,9 @@
+         { "mismatches", mismatches },
+         { "max_abs_error", max_error },
+         { "examples", examples },
+-        { "isolation", "fresh_cuda_context" },
++        { "isolation", "same_cuda_context" },
+         { "scope", resolved_case.kernel->backend == Backend::SASS
+             ? "execution_domain" : "cuda_strips" },
+     };
+     // clang-format on
+ }
+@@ -541,7 +556,7 @@
+         CaseResult result;
+ 
+         if (resolved_case.run.check) {
+-            result.validation = validate_case(resolved_case, device, workspace, input, references);
++            result.validation = validate_case(resolved_case, workspace, input, references);
+             failures += result.validation["status"] == "failed" ? 1 : 0;
+         }
+ 

@@ -1,0 +1,9 @@
+# Reference measurements for the offline Figure 9 quickcheck.
+figure = 9
+file = "fig09.csv"
+sha256 = "40ec168bc2b4f80e579d51d042864f3a66f00d35152eaa7c42b6ea96c07bd008"
+measurement_count = 95
+architectures = ["sm80", "sm90"]
+unit = "GStencil/s"
+source = "Validated artifact benchmark measurements collected on 2026-11-08 and 2026-11-09"
+drstencil = "Fixed reference measurements are supplied by scripts/experiments/drstencil.py"

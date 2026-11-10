@@ -1,0 +1,90 @@
+schema_version = 2
+seed = 42
+
+[defaults.run]
+warmup_runs = 0
+repeat_runs = 20
+measurement_runs = 15
+measurement_statistic = "mean"
+check = false
+cooldown_ms = 500
+
+[[case]]
+name = "star2d1r-sm90-baseline"
+[case.kernel]
+id = "97a23f9770a8d9327e74423d"
+[case.run]
+block = { x = 480 }
+domain = { x = 17056, y = 20478 }
+bands = [{ repeat = 3, grid = { x = 38 }, stream = 6826 }]
+time_steps = 32
+
+[[case]]
+name = "star2d1r-sm90-segmented SMEM"
+[case.kernel]
+id = "5271f7a8ff24c020105fc5f0"
+[case.run]
+block = { x = 480 }
+domain = { x = 17056, y = 20478 }
+bands = [{ repeat = 3, grid = { x = 38 }, stream = 6826 }]
+time_steps = 32
+
+[[case]]
+name = "star2d1r-sm90-Comm-Centric SMEM Scheduling"
+[case.kernel]
+id = "f97238c25da0fb4202459602"
+[case.run]
+block = { x = 480 }
+domain = { x = 17056, y = 20478 }
+bands = [{ repeat = 3, grid = { x = 38 }, stream = 6826 }]
+time_steps = 32
+
+[[case]]
+name = "star2d1r-sm90-layered point update"
+[case.kernel]
+id = "b9b87df9a3cd27641c6a3576"
+[case.run]
+block = { x = 480 }
+domain = { x = 17056, y = 20478 }
+bands = [{ repeat = 3, grid = { x = 38 }, stream = 6826 }]
+time_steps = 32
+
+[[case]]
+name = "box2d1r-sm90-baseline"
+[case.kernel]
+id = "4c3cfb98bb97c4b0f6500980"
+[case.run]
+block = { x = 512 }
+domain = { x = 18420, y = 18432 }
+bands = [{ repeat = 3, grid = { x = 38 }, stream = 6144 }]
+time_steps = 28
+
+[[case]]
+name = "box2d1r-sm90-segmented SMEM"
+[case.kernel]
+id = "59031fcea19c2bd72bd06054"
+[case.run]
+block = { x = 512 }
+domain = { x = 18420, y = 18432 }
+bands = [{ repeat = 3, grid = { x = 38 }, stream = 6144 }]
+time_steps = 28
+
+[[case]]
+name = "box2d1r-sm90-Comm-Centric SMEM Scheduling"
+[case.kernel]
+id = "a263a544e7875707a2fa506c"
+[case.run]
+block = { x = 512 }
+domain = { x = 18420, y = 18432 }
+bands = [{ repeat = 3, grid = { x = 38 }, stream = 6144 }]
+time_steps = 28
+
+[[case]]
+name = "box2d1r-sm90-layered point update"
+[case.kernel]
+id = "310d2891951ee105f2d72479"
+[case.run]
+block = { x = 512 }
+domain = { x = 18420, y = 18432 }
+bands = [{ repeat = 3, grid = { x = 38 }, stream = 6144 }]
+time_steps = 28

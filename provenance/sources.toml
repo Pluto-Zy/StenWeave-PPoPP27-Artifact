@@ -1,0 +1,66 @@
+[FlashFFTStencil]
+url = "https://github.com/HPHEX/FlashFFTStencil"
+commit = "881a57debb53ce79c1504c08dea740d577d5dbd0"
+license = "GPL-3.0 (upstream LICENSE)"
+snapshot = "vendor/FlashFFTStencil"
+patches = "provenance/patches/FlashFFTStencil/series"
+notes = "Allowlisted FP64 2D/3D common backends and their documentation; original files before patches."
+
+[AN5D]
+url = "https://github.com/Pluto-Zy/flow-stencil-artifact"
+commit = "968b4a7fd1d07ee628b95856ec444cb652c5a54f"
+upstream_url = "https://github.com/khaki3/AN5D-Artifact"
+license = "MIT (upstream LICENSE)"
+snapshot = "vendor/AN5D"
+checksums = "provenance/AN5D.sha256"
+patches = "provenance/patches/AN5D/series"
+notes = "74 generated FP64 source triplets for the ten paper stencils, common.h, upstream README and LICENSE. Every file verified byte-for-byte against the pinned predecessor import commit. Upstream revision was not recorded by that import; the commit above identifies the actual snapshot, not an inferred upstream revision. The AN5D compiler is not a build dependency."
+
+[EBISU]
+url = "https://github.com/Pluto-Zy/flow-stencil-artifact"
+commit = "3c27d3212d05d7983572bf237a071a9897b7f228"
+upstream_url = "https://github.com/neozhang307/EBISU-ICS23"
+license = "BSD-3-Clause (upstream LICENSE)"
+snapshot = "vendor/EBISU"
+checksums = "provenance/EBISU.sha256"
+patches = "provenance/patches/EBISU/series"
+notes = "Snapshot verified against the pinned predecessor import; the upstream revision was not recorded. Patches provide FP64 parameter overrides, build and argument handling, launch validation, shared-memory sizing and domain bounds."
+
+[ConvStencil]
+url = "https://github.com/Pluto-Zy/flow-stencil-artifact"
+commit = "fa1f0dabf1f73ba1e184ca6fe0a2cacab20bbcf2"
+upstream_url = "https://github.com/microsoft/ConvStencil"
+verified_kernel_commit = "89688a1b51ec41b4a81028b0661363ba3afd6050"
+license = "MIT (upstream LICENSE)"
+snapshot = "vendor/ConvStencil"
+checksums = "provenance/ConvStencil.sha256"
+patches = "provenance/patches/ConvStencil/series"
+notes = "Pinned predecessor import, including original build file. Patches retain integration and configurable tile parameters and provide paper-target builds and explicit one-operator validation."
+
+[LoRAStencil]
+url = "https://github.com/Pluto-Zy/flow-stencil-artifact"
+commit = "100392a02702317f4902398f8b75da8431629b58"
+upstream_url = "https://github.com/HPHEX/LoRAStencil"
+verified_kernel_commit = "1cdb7e25e09d48c0e0911513bff9165a6f8b8ef8"
+license = "MIT (upstream LICENSE)"
+snapshot = "vendor/LoRAStencil"
+checksums = "provenance/LoRAStencil.sha256"
+patches = "provenance/patches/LoRAStencil/series"
+notes = "Pinned predecessor import, including original build file. Patches retain integration and configurable tile parameters and provide paper-target builds and explicit one-operator validation."
+
+[StenWeave]
+url = "https://github.com/ustc623/stencil-experiment"
+commit = "6e6f9d3a888ad53c05ad4bc3d26d50f5b841c1a0"
+license = "No license file present in the selected source snapshot"
+snapshot = "vendor/StenWeave"
+checksums = "provenance/StenWeave.sha256"
+patches = "provenance/patches/StenWeave/series"
+notes = "Allowlisted generator and runner sources from the private paper implementation. Experiment configurations are under configs/stenweave. Integration removes test targets and records the original generator revision separately from the artifact repository revision."
+
+[StenWeave.dependencies.CuAssembler]
+url = "https://github.com/cloudcores/CuAssembler"
+commit = "96a9f72baf00f40b9b299653fcef8d3e2b4a3d49"
+license = "MIT (upstream LICENCE.md)"
+snapshot = "vendor/CuAssembler"
+checksums = "provenance/CuAssembler.sha256"
+notes = "Bundled SM80 SASS build dependency: unchanged CuAsm package, instruction repositories, README and license from the pinned commit. Tests, tools and Git history are excluded. Builds use this snapshot by default; --cuassembler explicitly selects another checkout. SM90 uses the StenWeave encoder."

@@ -1,0 +1,314 @@
+schema_version = 2
+seed = 42
+
+[defaults.run]
+warmup_runs = 0
+repeat_runs = 1
+check = false
+cooldown_ms = 500
+
+[[case]]
+name = "star2d1r-sm90-sass-tb01"
+[case.kernel]
+id = "7b3aae3514afa5630b2b691a"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 1
+
+[[case]]
+name = "star2d1r-sm90-sass-tb03"
+[case.kernel]
+id = "7436b7e644877dec243c12f4"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 3
+
+[[case]]
+name = "star2d1r-sm90-sass-tb05"
+[case.kernel]
+id = "e2feea10813ffb2964a06491"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 5
+
+[[case]]
+name = "star2d1r-sm90-sass-tb07"
+[case.kernel]
+id = "e7b2329a29e18ca16170a6aa"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 7
+
+[[case]]
+name = "star2d1r-sm90-sass-tb09"
+[case.kernel]
+id = "38ad0eed9c8d85f715905996"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 9
+
+[[case]]
+name = "star2d1r-sm90-sass-tb11"
+[case.kernel]
+id = "3bcb26d52b4b88ee603213ea"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 11
+
+[[case]]
+name = "star2d1r-sm90-sass-tb13"
+[case.kernel]
+id = "c274685bf853bce246c5635d"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 13
+
+[[case]]
+name = "star2d1r-sm90-sass-tb15"
+[case.kernel]
+id = "b9aaa2237de0a3ef957f5203"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 15
+
+[[case]]
+name = "star2d1r-sm90-sass-tb17"
+[case.kernel]
+id = "019948c2ea7c6d810583ca68"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 17
+
+[[case]]
+name = "star2d1r-sm90-sass-tb19"
+[case.kernel]
+id = "88011db55e11aac374968122"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 342 }, stream = 6826 }]
+time_steps = 19
+
+[[case]]
+name = "star3d1r-sm90-sass-tb01"
+[case.kernel]
+id = "2fb5299f9216c5ebf42b1112"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 512 }]
+time_steps = 1
+
+[[case]]
+name = "star3d1r-sm90-sass-tb02"
+[case.kernel]
+id = "b654ed56d94e6ca860ec4292"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 512 }]
+time_steps = 2
+
+[[case]]
+name = "star3d1r-sm90-sass-tb03"
+[case.kernel]
+id = "d3e4c59c6de19fcabebc49c5"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 512 }]
+time_steps = 3
+
+[[case]]
+name = "star3d1r-sm90-sass-tb04"
+[case.kernel]
+id = "e72c65a77c371a29f4479a10"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 512 }]
+time_steps = 4
+
+[[case]]
+name = "star3d1r-sm90-sass-tb05"
+[case.kernel]
+id = "6d3cd88c2d53723ac774963d"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 512 }]
+time_steps = 5
+
+[[case]]
+name = "star3d1r-sm90-sass-tb06"
+[case.kernel]
+id = "ad3e83b616509a88e9fc20c9"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 512 }]
+time_steps = 6
+
+[[case]]
+name = "star3d1r-sm90-sass-tb07"
+[case.kernel]
+id = "571bfc903ce558e1261e8049"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 512 }]
+time_steps = 7
+
+[[case]]
+name = "box2d1r-sm90-sass-tb01"
+[case.kernel]
+id = "a0eecd01af16dd6dc937341e"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 1
+
+[[case]]
+name = "box2d1r-sm90-sass-tb03"
+[case.kernel]
+id = "b50f90765b04f38529bb385f"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 3
+
+[[case]]
+name = "box2d1r-sm90-sass-tb05"
+[case.kernel]
+id = "4e7a2b83c47d09542d9ddf65"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 5
+
+[[case]]
+name = "box2d1r-sm90-sass-tb07"
+[case.kernel]
+id = "560d5f4410184ad3f04ceeec"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 7
+
+[[case]]
+name = "box2d1r-sm90-sass-tb09"
+[case.kernel]
+id = "092b35bd2698cb06106a1a65"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 9
+
+[[case]]
+name = "box2d1r-sm90-sass-tb11"
+[case.kernel]
+id = "b7fe42a0c8706e5700be0899"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 11
+
+[[case]]
+name = "box2d1r-sm90-sass-tb13"
+[case.kernel]
+id = "9afdce6d297be00d43ccb2ac"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 13
+
+[[case]]
+name = "box2d1r-sm90-sass-tb15"
+[case.kernel]
+id = "06016d455d13283f5c855800"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 15
+
+[[case]]
+name = "box2d1r-sm90-sass-tb17"
+[case.kernel]
+id = "c27b7afb89671bdd46fd955a"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 17
+
+[[case]]
+name = "box2d1r-sm90-sass-tb19"
+[case.kernel]
+id = "1b36c3758b03d9028bb8016c"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 114 }, stream = 6144 }]
+time_steps = 19
+
+[[case]]
+name = "box3d1r-sm90-sass-tb01"
+[case.kernel]
+id = "ce9ad281a660f696c8255a3c"
+[case.run]
+block = { x = 32, y = 24 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 640 }]
+time_steps = 1
+
+[[case]]
+name = "box3d1r-sm90-sass-tb02"
+[case.kernel]
+id = "9f9710f2a9e3cbaed02fc2ed"
+[case.run]
+block = { x = 32, y = 24 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 640 }]
+time_steps = 2
+
+[[case]]
+name = "box3d1r-sm90-sass-tb03"
+[case.kernel]
+id = "6248e67e14f9814dfc632af0"
+[case.run]
+block = { x = 32, y = 24 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 640 }]
+time_steps = 3
+
+[[case]]
+name = "box3d1r-sm90-sass-tb04"
+[case.kernel]
+id = "70aa8c53ca6167388f153a45"
+[case.run]
+block = { x = 32, y = 24 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 640 }]
+time_steps = 4
+
+[[case]]
+name = "box3d1r-sm90-sass-tb05"
+[case.kernel]
+id = "5053fbae4d3cd0d47e36e696"
+[case.run]
+block = { x = 32, y = 24 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 640 }]
+time_steps = 5
+
+[[case]]
+name = "box3d1r-sm90-sass-tb06"
+[case.kernel]
+id = "9bf15844dad2e7522070c385"
+[case.run]
+block = { x = 32, y = 24 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 640 }]
+time_steps = 6
+
+[[case]]
+name = "box3d1r-sm90-sass-tb07"
+[case.kernel]
+id = "94b5f909fb935d112e09ba6d"
+[case.run]
+block = { x = 32, y = 24 }
+bands = [{ repeat = 1, grid = { x = 19, y = 12 }, stream = 640 }]
+time_steps = 7

@@ -1,0 +1,16 @@
+--- a/runner/src/cuda/driver.cpp
++++ b/runner/src/cuda/driver.cpp
+@@ -54,6 +54,13 @@
+ Session::Session(CUdevice device) {
+     cuda_check(cuCtxGetCurrent(&previous_));
++#if CUDA_VERSION >= 13000
++    // CUDA 13 maps cuCtxCreate to v4, which adds context creation parameters.
++    // Zero initialization preserves the ordinary context used by CUDA 12.x.
++    CUctxCreateParams params{};
++    cuda_check(cuCtxCreate(&context_, &params, 0, device));
++#else
+     cuda_check(cuCtxCreate(&context_, 0, device));
++#endif
+ }
+ 
+ Session::~Session() {

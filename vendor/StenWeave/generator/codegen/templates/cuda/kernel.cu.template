@@ -1,0 +1,25 @@
+#include <cstdint>
+#include <cstring>
+#include <type_traits>
+
+template <class To, class From>
+__host__ __device__ auto bit_cast(From const &from) -> To {
+    static_assert(sizeof(To) == sizeof(From));
+    To to;
+    std::memcpy(&to, &from, sizeof(To));
+    return to;
+}
+
+extern "C" __constant__ double neighbor_coeffs[<<<coeff_count>>>];
+
+extern "C" __global__ void <<<launch_annotation>>> stencil_kernel(
+    double *input,
+    double *output,
+    unsigned height<<<extra_parameters>>>
+) {
+    extern __shared__ double shared_mem[];
+
+    <<<reg_declrations>>>;
+
+    <<<code>>>;
+}

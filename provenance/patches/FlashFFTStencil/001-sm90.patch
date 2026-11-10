@@ -1,0 +1,22 @@
+--- a/src/2D/common/fft_overlap_save/fft_2d.cu
++++ b/src/2D/common/fft_overlap_save/fft_2d.cu
+@@ -32,7 +32,7 @@
+  int device;cudaError_t err=cudaGetDevice(&device);if(err!=cudaSuccess)return err;
+  cudaDeviceProp prop;err=cudaGetDeviceProperties(&prop,device);if(err!=cudaSuccess)return err;
+  // This backend uses FP64 Tensor Core MMA, tuned and verified on A100 (sm_80).
+- if(prop.major!=8||prop.minor!=0)return cudaErrorNotSupported;
++ if((prop.major!=8&&prop.major!=9)||prop.minor!=0)return cudaErrorNotSupported;
+  static std::mutex init_mutex;
+  {std::lock_guard<std::mutex> lock(init_mutex);int ready=0;err=cudaMemcpyFromSymbol(&ready,flashfft2d_detail::tables_ready,sizeof(ready));if(err!=cudaSuccess)return err;if(!ready){
+   double re[64],im[64];double2 tw[64];
+--- a/src/3D/common/fft_overlap_save/fft_3d.cu
++++ b/src/3D/common/fft_overlap_save/fft_3d.cu
+@@ -141,7 +141,7 @@
+  int k=2*radius+1;for(int i=0;i<k*k*k;i++)if(!std::isfinite(coeff[i]))return cudaErrorInvalidValue;
+  int device;cudaError_t e=cudaGetDevice(&device);if(e!=cudaSuccess)return e;
+  cudaDeviceProp prop;e=cudaGetDeviceProperties(&prop,device);if(e!=cudaSuccess)return e;
+- if(prop.major!=8||prop.minor!=0)return cudaErrorNotSupported;
++ if((prop.major!=8&&prop.major!=9)||prop.minor!=0)return cudaErrorNotSupported;
+  e=initialize3d();if(e!=cudaSuccess)return e;
+  auto*plan=new(std::nothrow) FlashFFT3DPlan;if(!plan)return cudaErrorMemoryAllocation;
+  plan->radius=radius;plan->device=device;

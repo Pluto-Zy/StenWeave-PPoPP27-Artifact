@@ -1,0 +1,391 @@
+diff --git a/2dstencil/CMakeLists.txt b/2dstencil/CMakeLists.txt
+index 0e99e82..bca9d14 100644
+--- a/2dstencil/CMakeLists.txt
++++ b/2dstencil/CMakeLists.txt
+@@ -19,10 +19,8 @@ set(
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}")
+ set(CMAKE_CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+ 
+-set(CMAKE_CXX_STANDARD 17)
++set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD_REQUIRED True)
+-set(CMAKE_CUDA_STANDARD 17)
+-set(CMAKE_CUDA_STANDARD_REQUIRED True)
+ 
+ #star
+ add_subdirectory(2d5pt)
+diff --git a/2dstencil/jacobi.driver.cpp b/2dstencil/jacobi.driver.cpp
+index 339790d..0b65637 100644
+--- a/2dstencil/jacobi.driver.cpp
++++ b/2dstencil/jacobi.driver.cpp
+@@ -17,15 +17,15 @@ template <class REAL>
+ double runTest(int width_x, int width_y, int iteration, int bdimx, int blkpsm, bool check, bool usewarmup, bool verbose)
+ {
+   double error = 0;
++  REAL *input_raw = getRandom2DArray<REAL>(width_y, width_x);
++  REAL *output_raw = getZero2DArray<REAL>(width_y, width_x);
++  REAL *output_gold_raw = getZero2DArray<REAL>(width_y, width_x);
+   REAL(*input)
+-  [width_x] = (REAL(*)[width_x])
+-      getRandom2DArray<REAL>(width_y, width_x);
++  [width_x] = reinterpret_cast<REAL(*)[width_x]>(input_raw);
+   REAL(*output)
+-  [width_x] = (REAL(*)[width_x])
+-      getZero2DArray<REAL>(width_y, width_x);
++  [width_x] = reinterpret_cast<REAL(*)[width_x]>(output_raw);
+   REAL(*output_gold)
+-  [width_x] = (REAL(*)[width_x])
+-      getZero2DArray<REAL>(width_y, width_x);
++  [width_x] = reinterpret_cast<REAL(*)[width_x]>(output_gold_raw);
+ #ifdef REFCHECK
+   jacobi_gold((REAL *)input, width_y, width_x, (REAL *)output);
+   jacobi_gold_iterative((REAL *)input, width_y, width_x, (REAL *)output_gold, iteration);
+@@ -46,12 +46,12 @@ double runTest(int width_x, int width_y, int iteration, int bdimx, int blkpsm, b
+   {
+     int halo = HALO * iteration;
+     error =
+-        checkError2D<REAL>(width_x, (REAL *)output, (REAL *)output_gold, halo, width_y - halo, halo, width_x - halo);
++        checkError2D<REAL>(width_x, output_raw, output_gold_raw, halo, width_y - halo, halo, width_x - halo);
+     printf("[Test] RMS Error : %e\n", error);
+   }
+-  delete[] input;
+-  delete[] output;
+-  delete[] output_gold;
++  delete[] input_raw;
++  delete[] output_raw;
++  delete[] output_gold_raw;
+   return error;
+ }
+ 
+@@ -69,15 +69,9 @@ int main(int argc, char *argv[])
+   bool usewarmup = false;   // if use warmup
+   bool isExpriment = false; // the experiment setting in ICS23 paper
+   bool verbose = false;     // verbose output
+-  if (argc >= 3)
+-  {
+-    width_y = atoi(argv[1]);
+-    width_x = atoi(argv[2]);
+-    width_x = width_x == 0 ? 2048 : width_x;
+-    width_y = width_y == 0 ? 2048 : width_y;
+-  }
+ 
+   CommandLineArgs args(argc, argv);
++  const int naked_argc = args.NumNakedArgs<int>();
+ 
+   args.GetCmdLineArgument("bdim", bdimx);
+   args.GetCmdLineArgument("blkpsm", blkpsm);
+@@ -93,6 +87,13 @@ int main(int argc, char *argv[])
+     bdimx = 256;
+   if (iteration == 0)
+     iteration = 3;
++  if (naked_argc >= 2)
++  {
++    args.GetCmdLineArgument(0, width_y);
++    args.GetCmdLineArgument(1, width_x);
++    width_x = width_x <= 0 ? 2048 : width_x;
++    width_y = width_y <= 0 ? 2048 : width_y;
++  }
+ #ifndef REFCHECK
+   if (isExpriment)
+   {
+diff --git a/3dstencil/3d13pt/CMakeLists.txt b/3dstencil/3d13pt/CMakeLists.txt
+index 708e309..1aa3958 100644
+--- a/3dstencil/3d13pt/CMakeLists.txt
++++ b/3dstencil/3d13pt/CMakeLists.txt
+@@ -59,9 +59,7 @@ function(subcompile prefix default_compiler_flag aim)
+     message("lib is ${LOCAL_LIB}")
+ 
+     add_library(${libraryname} ${LOCAL_SOURCE})
+-    set_target_properties(${libraryname} PROPERTIES
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties(${libraryname} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+     set_target_properties(${libraryname} PROPERTIES COMPILE_FLAGS "${local_compiler_flag} ")
+     set_target_properties(${libraryname} PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     target_link_libraries(${libraryname} PUBLIC ${LOCAL_LIB}  ${CUDA_LIBRARIES})
+@@ -69,8 +67,7 @@ function(subcompile prefix default_compiler_flag aim)
+     add_executable(${local_goal} ${LOCAL_DRIVER})
+     set_target_properties(${local_goal}
+                       PROPERTIES LANGUAGES CUDA LINKER_LANGUAGE CUDA
+-                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}"
+-                      CUDA_SEPARABLE_COMPILATION ON)
++                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}")
+     set_target_properties("${local_goal}" PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     set_target_properties(${local_goal} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+ 
+@@ -79,10 +76,7 @@ function(subcompile prefix default_compiler_flag aim)
+ endfunction()
+ function(mylib sublib subkernelfile compiler_flag)
+     add_library("${sublib}" "${subkernelfile}")
+-    set_target_properties("${sublib}" PROPERTIES
+-        COMPILE_FLAGS "${compiler_flag}"
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties("${sublib}" PROPERTIES COMPILE_FLAGS "${compiler_flag}")
+ endfunction()
+ 
+ 
+diff --git a/3dstencil/3d17pt/CMakeLists.txt b/3dstencil/3d17pt/CMakeLists.txt
+index 9639f58..cf0f778 100644
+--- a/3dstencil/3d17pt/CMakeLists.txt
++++ b/3dstencil/3d17pt/CMakeLists.txt
+@@ -59,9 +59,7 @@ function(subcompile prefix default_compiler_flag aim)
+     message("lib is ${LOCAL_LIB}")
+ 
+     add_library(${libraryname} ${LOCAL_SOURCE})
+-    set_target_properties(${libraryname} PROPERTIES
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties(${libraryname} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+     set_target_properties(${libraryname} PROPERTIES COMPILE_FLAGS "${local_compiler_flag} ")
+     set_target_properties(${libraryname} PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     target_link_libraries(${libraryname} PUBLIC ${LOCAL_LIB}  ${CUDA_LIBRARIES})
+@@ -69,8 +67,7 @@ function(subcompile prefix default_compiler_flag aim)
+     add_executable(${local_goal} ${LOCAL_DRIVER})
+     set_target_properties(${local_goal}
+                       PROPERTIES LANGUAGES CUDA LINKER_LANGUAGE CUDA
+-                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}"
+-                      CUDA_SEPARABLE_COMPILATION ON)
++                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}")
+     set_target_properties("${local_goal}" PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     set_target_properties(${local_goal} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+ 
+@@ -79,10 +76,7 @@ function(subcompile prefix default_compiler_flag aim)
+ endfunction()
+ function(mylib sublib subkernelfile compiler_flag)
+     add_library("${sublib}" "${subkernelfile}")
+-    set_target_properties("${sublib}" PROPERTIES
+-        COMPILE_FLAGS "${compiler_flag}"
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties("${sublib}" PROPERTIES COMPILE_FLAGS "${compiler_flag}")
+ endfunction()
+ 
+ 
+diff --git a/3dstencil/3d27pt/CMakeLists.txt b/3dstencil/3d27pt/CMakeLists.txt
+index 9639f58..cf0f778 100644
+--- a/3dstencil/3d27pt/CMakeLists.txt
++++ b/3dstencil/3d27pt/CMakeLists.txt
+@@ -59,9 +59,7 @@ function(subcompile prefix default_compiler_flag aim)
+     message("lib is ${LOCAL_LIB}")
+ 
+     add_library(${libraryname} ${LOCAL_SOURCE})
+-    set_target_properties(${libraryname} PROPERTIES
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties(${libraryname} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+     set_target_properties(${libraryname} PROPERTIES COMPILE_FLAGS "${local_compiler_flag} ")
+     set_target_properties(${libraryname} PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     target_link_libraries(${libraryname} PUBLIC ${LOCAL_LIB}  ${CUDA_LIBRARIES})
+@@ -69,8 +67,7 @@ function(subcompile prefix default_compiler_flag aim)
+     add_executable(${local_goal} ${LOCAL_DRIVER})
+     set_target_properties(${local_goal}
+                       PROPERTIES LANGUAGES CUDA LINKER_LANGUAGE CUDA
+-                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}"
+-                      CUDA_SEPARABLE_COMPILATION ON)
++                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}")
+     set_target_properties("${local_goal}" PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     set_target_properties(${local_goal} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+ 
+@@ -79,10 +76,7 @@ function(subcompile prefix default_compiler_flag aim)
+ endfunction()
+ function(mylib sublib subkernelfile compiler_flag)
+     add_library("${sublib}" "${subkernelfile}")
+-    set_target_properties("${sublib}" PROPERTIES
+-        COMPILE_FLAGS "${compiler_flag}"
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties("${sublib}" PROPERTIES COMPILE_FLAGS "${compiler_flag}")
+ endfunction()
+ 
+ 
+diff --git a/3dstencil/3d7pt/CMakeLists.txt b/3dstencil/3d7pt/CMakeLists.txt
+index 708e309..1aa3958 100644
+--- a/3dstencil/3d7pt/CMakeLists.txt
++++ b/3dstencil/3d7pt/CMakeLists.txt
+@@ -59,9 +59,7 @@ function(subcompile prefix default_compiler_flag aim)
+     message("lib is ${LOCAL_LIB}")
+ 
+     add_library(${libraryname} ${LOCAL_SOURCE})
+-    set_target_properties(${libraryname} PROPERTIES
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties(${libraryname} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+     set_target_properties(${libraryname} PROPERTIES COMPILE_FLAGS "${local_compiler_flag} ")
+     set_target_properties(${libraryname} PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     target_link_libraries(${libraryname} PUBLIC ${LOCAL_LIB}  ${CUDA_LIBRARIES})
+@@ -69,8 +67,7 @@ function(subcompile prefix default_compiler_flag aim)
+     add_executable(${local_goal} ${LOCAL_DRIVER})
+     set_target_properties(${local_goal}
+                       PROPERTIES LANGUAGES CUDA LINKER_LANGUAGE CUDA
+-                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}"
+-                      CUDA_SEPARABLE_COMPILATION ON)
++                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}")
+     set_target_properties("${local_goal}" PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     set_target_properties(${local_goal} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+ 
+@@ -79,10 +76,7 @@ function(subcompile prefix default_compiler_flag aim)
+ endfunction()
+ function(mylib sublib subkernelfile compiler_flag)
+     add_library("${sublib}" "${subkernelfile}")
+-    set_target_properties("${sublib}" PROPERTIES
+-        COMPILE_FLAGS "${compiler_flag}"
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties("${sublib}" PROPERTIES COMPILE_FLAGS "${compiler_flag}")
+ endfunction()
+ 
+ 
+diff --git a/3dstencil/CMakeLists.txt b/3dstencil/CMakeLists.txt
+index 933603e..42fa75f 100644
+--- a/3dstencil/CMakeLists.txt
++++ b/3dstencil/CMakeLists.txt
+@@ -16,13 +16,9 @@ set(
+ )
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}")
+ set(CMAKE_CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+-set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --static-global-template-stub=false")
+ 
+-set(CMAKE_CXX_STANDARD 17)
++set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD_REQUIRED True)
+-set(CMAKE_CUDA_STANDARD 17)
+-set(CMAKE_CUDA_STANDARD_REQUIRED True)
+ 
+ 
+ #start
+diff --git a/3dstencil/j3d.driver.cpp b/3dstencil/j3d.driver.cpp
+index 581e23a..59d8da0 100644
+--- a/3dstencil/j3d.driver.cpp
++++ b/3dstencil/j3d.driver.cpp
+@@ -17,15 +17,18 @@ double runTest(int height, int width_y, int width_x,
+                bool check,
+                bool verbose)
+ {
++  REAL *input_raw = getRandom3DArray<REAL>(height, width_y, width_x);
++  REAL *output_raw = getZero3DArray<REAL>(height, width_y, width_x);
++  REAL *output_gold_raw = getZero3DArray<REAL>(height, width_y, width_x);
++
+   REAL(*input)
+-  [width_y][width_x] = (REAL(*)[width_y][width_x])
+-      getRandom3DArray<REAL>(height, width_y, width_x);
++  [width_y][width_x] = reinterpret_cast<REAL(*)[width_y][width_x]>(input_raw);
+   REAL(*output)
+-  [width_y][width_x] = (REAL(*)[width_y][width_x])
+-      getZero3DArray<REAL>(height, width_y, width_x);
++  [width_y][width_x] = reinterpret_cast<REAL(*)[width_y][width_x]>(output_raw);
+   REAL(*output_gold)
+-  [width_y][width_x] = (REAL(*)[width_y][width_x])
+-      getZero3DArray<REAL>(height, width_y, width_x);
++  [width_y][width_x] = reinterpret_cast<REAL(*)[width_y][width_x]>(output_gold_raw);
++
++  double error = 0.0;
+ 
+   iteration = iteration == 0 ? 3 : iteration;
+ #ifdef REFCHECK
+@@ -56,15 +59,15 @@ double runTest(int height, int width_y, int width_x,
+   if (check != 0)
+   {
+     int domain_hallo = HALO * iteration;
+-    double error =
+-        checkError3D<REAL>(width_y, width_x, (REAL *)output, (REAL *)output_gold, domain_hallo, height - domain_hallo, domain_hallo,
++    error =
++        checkError3D<REAL>(width_y, width_x, output_raw, output_gold_raw, domain_hallo, height - domain_hallo, domain_hallo,
+                            width_y - domain_hallo, domain_hallo, width_x - domain_hallo);
+     printf("[Test] RMS Error : %e\n", error);
+-    return error;
+   }
+-  delete[] input;
+-  delete[] output;
+-  delete[] output_gold;
++  delete[] input_raw;
++  delete[] output_raw;
++  delete[] output_gold_raw;
++  return error;
+ }
+ 
+ int main(int argc, char **argv)
+@@ -87,6 +90,7 @@ int main(int argc, char **argv)
+   int iteration = 3;
+ 
+   CommandLineArgs args(argc, argv);
++  const int naked_argc = args.NumNakedArgs<int>();
+   fp32 = args.CheckCmdLineFlag("fp32");
+   check = args.CheckCmdLineFlag("check");
+   usewarmup = args.CheckCmdLineFlag("warmup");
+@@ -116,11 +120,11 @@ int main(int argc, char **argv)
+     }
+   }
+ #endif
+-  if (argc >= 3)
++  if (naked_argc >= 3)
+   {
+-    width_x = atoi(argv[1]);
+-    width_y = atoi(argv[2]);
+-    height = atoi(argv[3]);
++    args.GetCmdLineArgument(0, width_x);
++    args.GetCmdLineArgument(1, width_y);
++    args.GetCmdLineArgument(2, height);
+ 
+     height = height <= 0 ? 256 : height;
+     width_x = width_x <= 0 ? 256 : width_x;
+diff --git a/3dstencil/poisson/CMakeLists.txt b/3dstencil/poisson/CMakeLists.txt
+index 9639f58..cf0f778 100644
+--- a/3dstencil/poisson/CMakeLists.txt
++++ b/3dstencil/poisson/CMakeLists.txt
+@@ -59,9 +59,7 @@ function(subcompile prefix default_compiler_flag aim)
+     message("lib is ${LOCAL_LIB}")
+ 
+     add_library(${libraryname} ${LOCAL_SOURCE})
+-    set_target_properties(${libraryname} PROPERTIES
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties(${libraryname} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+     set_target_properties(${libraryname} PROPERTIES COMPILE_FLAGS "${local_compiler_flag} ")
+     set_target_properties(${libraryname} PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     target_link_libraries(${libraryname} PUBLIC ${LOCAL_LIB}  ${CUDA_LIBRARIES})
+@@ -69,8 +67,7 @@ function(subcompile prefix default_compiler_flag aim)
+     add_executable(${local_goal} ${LOCAL_DRIVER})
+     set_target_properties(${local_goal}
+                       PROPERTIES LANGUAGES CUDA LINKER_LANGUAGE CUDA
+-                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}"
+-                      CUDA_SEPARABLE_COMPILATION ON)
++                      RUNTIME_OUTPUT_DIRECTORY "${EBISU_RUNTIME_OUTPUT_DIRECTORY}")
+     set_target_properties("${local_goal}" PROPERTIES CUDA_ARCHITECTURES "${EBISU_CUDA_ARCHITECTURES}")
+     set_target_properties(${local_goal} PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+ 
+@@ -79,10 +76,7 @@ function(subcompile prefix default_compiler_flag aim)
+ endfunction()
+ function(mylib sublib subkernelfile compiler_flag)
+     add_library("${sublib}" "${subkernelfile}")
+-    set_target_properties("${sublib}" PROPERTIES
+-        COMPILE_FLAGS "${compiler_flag}"
+-        CUDA_RESOLVE_DEVICE_SYMBOLS ON
+-        CUDA_SEPARABLE_COMPILATION ON)
++    set_target_properties("${sublib}" PROPERTIES COMPILE_FLAGS "${compiler_flag}")
+ endfunction()
+ 
+ 
+diff --git a/share/launchHelper.cuh b/share/launchHelper.cuh
+index 4aef132..b14e7b9 100644
+--- a/share/launchHelper.cuh
++++ b/share/launchHelper.cuh
+@@ -77,7 +77,7 @@ void LaunchHelper<useCooperativeLaunch>::warmup(Kernel_t kernel, dim3 gdim, dim3
+     cudaEventSynchronize(warmstop);
+     float warmelapsedTime;
+     cudaEventElapsedTime(&warmelapsedTime, warstart, warmstop);
+-    int nowwarmup = warmelapsedTime;
++    int nowwarmup = warmelapsedTime > 1.0f ? static_cast<int>(warmelapsedTime) : 1;
+     int nowiter = (warmupaim + nowwarmup - 1) / nowwarmup;
+     for (int out = 0; out < nowiter; out++)
+     {
+@@ -107,7 +107,7 @@ void LaunchHelper<useCooperativeLaunch>::warmup(Kernel_t kernel, Function func,
+     cudaEventSynchronize(warmstop);
+     float warmelapsedTime;
+     cudaEventElapsedTime(&warmelapsedTime, warstart, warmstop);
+-    int nowwarmup = warmelapsedTime;
++    int nowwarmup = warmelapsedTime > 1.0f ? static_cast<int>(warmelapsedTime) : 1;
+     int nowiter = (warmupaim + nowwarmup - 1) / nowwarmup;
+     for (int out = 0; out < nowiter; out++)
+     {

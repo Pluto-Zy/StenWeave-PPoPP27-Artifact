@@ -1,0 +1,5 @@
+tomli>=2; python_version < "3.11"
+numpy
+matplotlib
+pyelftools
+sympy

@@ -1,0 +1,63 @@
+schema_version = 2
+
+[artifact]
+name = "ppopp27-breakdown"
+
+# Four cumulative stages use each architecture's benchmark CUDA geometry.
+# Stages: baseline; segmented SMEM; Comm-Centric SMEM Scheduling; layered point update.
+
+[[kernels]]
+backend = "cuda"
+shape = "star"
+dimensions = 2
+arch = ["sm80"]
+profile = "breakdown"
+
+[[kernels.variants]]
+launch_bounds = 512
+radius = 1
+time_block_size = 15
+minimum_overlap = 30
+stages = [1, 2, 3, 4]
+
+[[kernels]]
+backend = "cuda"
+shape = "star"
+dimensions = 2
+arch = ["sm90"]
+profile = "breakdown"
+
+[[kernels.variants]]
+launch_bounds = 480
+radius = 1
+time_block_size = 16
+minimum_overlap = 32
+stages = [1, 2, 3, 4]
+
+[[kernels]]
+backend = "cuda"
+shape = "box"
+dimensions = 2
+arch = ["sm80"]
+profile = "breakdown"
+
+[[kernels.variants]]
+launch_bounds = 768
+radius = 1
+time_block_size = 8
+minimum_overlap = 16
+stages = [1, 2, 3, 4]
+
+[[kernels]]
+backend = "cuda"
+shape = "box"
+dimensions = 2
+arch = ["sm90"]
+profile = "breakdown"
+
+[[kernels.variants]]
+launch_bounds = 512
+radius = 1
+time_block_size = 14
+minimum_overlap = 28
+stages = [1, 2, 3, 4]

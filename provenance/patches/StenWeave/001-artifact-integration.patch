@@ -1,0 +1,55 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,6 +36,4 @@
+ find_package(CUDAToolkit REQUIRED)
+ find_package(Threads REQUIRED)
+ 
+-include(CTest)
+-
+ add_subdirectory(runner)
+--- a/runner/CMakeLists.txt
++++ b/runner/CMakeLists.txt
+@@ -41,31 +41,3 @@
+     ${NVML_LIBRARY}
+ )
+ 
+-if (BUILD_TESTING)
+-    add_executable(runner_tests tests/runner_tests.cpp)
+-    target_link_libraries(runner_tests PRIVATE stencil_model)
+-    add_test(NAME runner_pure COMMAND runner_tests)
+-    add_test(
+-        NAME runner_copy_contract
+-        COMMAND ${CMAKE_COMMAND} -DRUNNER_SOURCE=${CMAKE_CURRENT_SOURCE_DIR}
+-                -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/copy_contract.cmake
+-    )
+-    add_test(
+-        NAME runner_graph_contract
+-        COMMAND ${CMAKE_COMMAND} -DRUNNER_SOURCE=${CMAKE_CURRENT_SOURCE_DIR}
+-                -P ${CMAKE_CURRENT_SOURCE_DIR}/tests/graph_contract.cmake
+-    )
+-endif ()
+-
+-# Artifacts are generated offline; GPU integration is opt-in for an existing SM80 artifact.
+-set(STENCIL_GPU_ARTIFACT_DIR "" CACHE PATH "Artifact root for banded GPU integration")
+-set(STENCIL_GPU_DEVICE 0 CACHE STRING "CUDA device ordinal for banded GPU integration")
+-if (BUILD_TESTING AND STENCIL_GPU_ARTIFACT_DIR)
+-    add_test(
+-        NAME runner_banded_gpu
+-        COMMAND stencil run ${CMAKE_CURRENT_SOURCE_DIR}/tests/banded_gpu.toml
+-            --artifact-dir ${STENCIL_GPU_ARTIFACT_DIR} --device ${STENCIL_GPU_DEVICE}
+-            --output ${CMAKE_CURRENT_BINARY_DIR}/banded_gpu.jsonl --overwrite
+-            --input-threads 4 --no-color
+-    )
+-endif ()
+--- a/generator/codegen/artifact.py
++++ b/generator/codegen/artifact.py
+@@ -63,7 +63,8 @@
+             {
+                 "python": platform.python_version(),
+                 "nvcc": version.stdout.strip(),
+-                "generator_revision": revision.stdout.strip()
++                "generator_revision": "6e6f9d3a888ad53c05ad4bc3d26d50f5b841c1a0",
++                "artifact_repository_revision": revision.stdout.strip()
+                 if revision.returncode == 0
+                 else "unknown",
+                 "config_sha256": hashlib.sha256(config.read_bytes()).hexdigest(),

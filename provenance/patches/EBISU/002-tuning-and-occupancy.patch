@@ -1,0 +1,211 @@
+diff --git a/2dstencil/common/iptconfig.cuh b/2dstencil/common/iptconfig.cuh
+index 13ccf56..dfe6197 100644
+--- a/2dstencil/common/iptconfig.cuh
++++ b/2dstencil/common/iptconfig.cuh
+@@ -14,7 +14,11 @@ struct ipts
+ template<int halo, int shape> 
+ struct ipts<halo,shape,double>
+ {
++#ifdef EBISU_TUNE_IPTS_FP64
++  static int const val = EBISU_TUNE_IPTS_FP64;
++#else
+   static int const val = 4;
++#endif
+ };
+ 
+ 
+@@ -23,4 +27,3 @@ struct ipts<halo,shape,float>
+ {
+   static int const val = 8;
+ };
+-
+diff --git a/2dstencil/common/temporalconfig.cuh b/2dstencil/common/temporalconfig.cuh
+index 4f4a70a..dad72d2 100644
+--- a/2dstencil/common/temporalconfig.cuh
++++ b/2dstencil/common/temporalconfig.cuh
+@@ -11,13 +11,21 @@ struct timesteps
+ template<int halo, int shape, int ipt>
+ struct timesteps<halo,shape,ipt,double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 1;
++#endif
+ };
+ 
+ template<>
+ struct timesteps< 1,  star_shape,  4,  double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val =12;
++#endif
+ };
+ 
+ 
+@@ -30,7 +38,11 @@ struct timesteps< 1,  star_shape,  8,  float>
+ template<>
+ struct timesteps< 2,  star_shape,  4,  double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 8;
++#endif
+ };
+ 
+ 
+@@ -44,7 +56,11 @@ struct timesteps< 2,  star_shape,  8,  float>
+ template<>
+ struct timesteps< 1,  box_shape,  4,  double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 6;
++#endif
+   // static int const val = 2;
+ };
+ 
+@@ -58,7 +74,11 @@ struct timesteps< 1,  box_shape,  8,  float>
+ template<>
+ struct timesteps< 2,  box_shape,  4,  double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 4;
++#endif
+ };
+ 
+ template<>
+@@ -66,4 +86,3 @@ struct timesteps< 2,  box_shape,  8,  float>
+ {
+   static int const val = 6;//7;
+ };
+-
+diff --git a/2dstencil/jacobi-2d.cu b/2dstencil/jacobi-2d.cu
+index 2db98eb..cc07828 100644
+--- a/2dstencil/jacobi-2d.cu
++++ b/2dstencil/jacobi-2d.cu
+@@ -121,6 +121,11 @@ int jacobi_iterative(REAL *h_input, int width_y, int width_x, REAL *__var_0__,
+     numBlocksPerSm_current = min(numBlocksPerSm_current, blkpsm);
+   }
+ 
++  if (numBlocksPerSm_current <= 0)
++  {
++    return 1;
++  }
++
+   dim3 block_dim(bdimx);
+   int valid_dimx = bdimx - 2 * HALO * (TSTEP);
+   int gimx = (width_x + valid_dimx - 1) / (valid_dimx);
+@@ -199,4 +204,4 @@ template int jacobi_iterative<float>(float *h_input, int width_y, int width_x, f
+                                      bool usewarmup, bool verbose);
+ template int jacobi_iterative<double>(double *h_input, int width_y, int width_x, double *__var_0__,
+                                       int bdimx, int blkpsm, int iteration,
+-                                      bool usewarmup, bool verbose);
+\ No newline at end of file
++                                      bool usewarmup, bool verbose);
+diff --git a/3dstencil/common/iptconfig.cuh b/3dstencil/common/iptconfig.cuh
+index d228616..5ca7dbf 100644
+--- a/3dstencil/common/iptconfig.cuh
++++ b/3dstencil/common/iptconfig.cuh
+@@ -24,8 +24,16 @@ struct ipts
+ template<int halo, int shape> 
+ struct ipts<halo,shape,double>
+ {
++#ifdef EBISU_TUNE_IPTS_FP64
++  static int const val = EBISU_TUNE_IPTS_FP64;
++#else
+   static int const val = 4;
++#endif
++#ifdef EBISU_TUNE_TILE_X_FP64
++  static int const tile_x = EBISU_TUNE_TILE_X_FP64;
++#else
+   static int const tile_x = 32;
++#endif
+ };
+ 
+ template<int halo, int shape> 
+diff --git a/3dstencil/common/temporalconfig.cuh b/3dstencil/common/temporalconfig.cuh
+index 78cc1e0..b44b00b 100644
+--- a/3dstencil/common/temporalconfig.cuh
++++ b/3dstencil/common/temporalconfig.cuh
+@@ -25,13 +25,21 @@ struct timesteps
+ template<int halo, int shape, int ipt>
+ struct timesteps<halo,shape,ipt,double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 1;
++#endif
+ };
+ 
+ template<>
+ struct timesteps< 1,  star_shape,  4,  double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 8;
++#endif
+ };
+ 
+ template<>
+@@ -45,7 +53,11 @@ struct timesteps< 1,  star_shape,  8,  float>
+ template<>
+ struct timesteps< 2,  star_shape,  4,  double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 5;
++#endif
+ };
+ 
+ template<>
+@@ -57,7 +69,11 @@ struct timesteps< 2,  star_shape,  8,  float>
+ template<>
+ struct timesteps<1, box_shape,  4,  double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 5;
++#endif
+   // static int const val = 4;
+   // static int const val = 1;
+   // static int const val = 2;
+@@ -72,7 +88,11 @@ struct timesteps< 1,  box_shape,  8,  float>
+ template<>
+ struct timesteps<1, type0_shape,  4,  double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 6;
++#endif
+   // static int const val = 2;
+ };
+ 
+@@ -85,7 +105,11 @@ struct timesteps< 1,  type0_shape,  8,  float>
+ template<>
+ struct timesteps<1, poisson_shape,  4,  double>
+ {
++#ifdef EBISU_TUNE_TSTEP_FP64
++  static int const val = EBISU_TUNE_TSTEP_FP64;
++#else
+   static int const val = 6;
++#endif
+ };
+ 
+ template<>
+@@ -95,4 +119,3 @@ struct timesteps< 1,  poisson_shape,  8,  float>
+ };
+ 
+ 
+-

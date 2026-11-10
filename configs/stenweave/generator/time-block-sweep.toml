@@ -1,0 +1,596 @@
+schema_version = 2
+
+[artifact]
+name = "ppopp27-time-block-sweep"
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 2
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 1
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 5
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 9
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 11
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 13
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 15
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 17
+minimum_overlap = 34
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 19
+minimum_overlap = 38
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 2
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 1
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 5
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 9
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 11
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 13
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 15
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 17
+minimum_overlap = 34
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 19
+minimum_overlap = 38
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 3
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 1
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 5
+minimum_overlap = { x = 10, y = 10 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 6
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = { x = 14, y = 14 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 3
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 1
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 5
+minimum_overlap = { x = 10, y = 10 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 6
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = { x = 14, y = 14 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 2
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 1
+minimum_overlap = 16
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = 16
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 5
+minimum_overlap = 16
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = 16
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 9
+minimum_overlap = 18
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 11
+minimum_overlap = 22
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 13
+minimum_overlap = 26
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 15
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 17
+minimum_overlap = 34
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 19
+minimum_overlap = 38
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 2
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 1
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 5
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 9
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 11
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 13
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 15
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 17
+minimum_overlap = 34
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 19
+minimum_overlap = 38
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 3
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 1
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = { x = 6, y = 6 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 5
+minimum_overlap = { x = 10, y = 10 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 6
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 3
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = { x = 14, y = 14 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 3
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 3
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 1
+minimum_overlap = { x = 6, y = 6 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 6, y = 6 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = { x = 6, y = 6 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 5
+minimum_overlap = { x = 10, y = 10 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 6
+minimum_overlap = { x = 12, y = 12 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 2
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = { x = 14, y = 14 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 2

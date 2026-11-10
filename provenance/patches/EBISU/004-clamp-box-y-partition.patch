@@ -1,0 +1,11 @@
+--- a/2dstencil/jacobi-temporal-traditional-box.cu
++++ b/2dstencil/jacobi-temporal-traditional-box.cu
+@@ -34,7 +34,7 @@
+   int blocksize_y = (width_y + gridDim.y - 1) / gridDim.y;
+ 
+   const int p_y = blockIdx.y * (blocksize_y);
+-  const int p_y_end = p_y + (blocksize_y);
++  const int p_y_end = min(p_y + (blocksize_y), width_y);
+ 
+   const int p_y_real = (p_y - 2 * halo * LOCAL_DEPTH);                          //-((halo*LOCAL_DEPTH+LOCAL_TILE_Y-1)/LOCAL_TILE_Y)*LOCAL_TILE_Y-halo;//(LOCAL_TILE_Y)*(LOCAL_DEPTH-1);//(p_y - LOCAL_DEPTH*(halo)*2);
+   const int p_y_real_end = p_y_end + (halo + LOCAL_TILE_Y) * (LOCAL_DEPTH - 1); //(p_y_end + LOCAL_DEPTH*(halo+LOCAL_TILE_Y));

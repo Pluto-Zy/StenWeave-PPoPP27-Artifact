@@ -1,0 +1,542 @@
+schema_version = 2
+
+[artifact]
+name = "ppopp27-size-sweep"
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 2
+arch = ["sm80"]
+
+# Target sides: 13312.
+[[kernels.variants]]
+radius = 1
+time_block_size = 11
+minimum_overlap = 22
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 10240, 15360.
+[[kernels.variants]]
+radius = 1
+time_block_size = 12
+minimum_overlap = 24
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 4096, 5120, 7168, 8192, 14336, 16384, 18432.
+[[kernels.variants]]
+radius = 1
+time_block_size = 13
+minimum_overlap = 26
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 17408, 19456.
+[[kernels.variants]]
+radius = 1
+time_block_size = 14
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 3072.
+[[kernels.variants]]
+radius = 1
+time_block_size = 15
+minimum_overlap = 30
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 11264.
+[[kernels.variants]]
+radius = 1
+time_block_size = 16
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 20480.
+[[kernels.variants]]
+radius = 1
+time_block_size = 16
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 2048.
+[[kernels.variants]]
+radius = 1
+time_block_size = 16
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 3
+
+# Target sides: 6144, 9216, 12288.
+[[kernels.variants]]
+radius = 1
+time_block_size = 18
+minimum_overlap = 36
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 1024.
+[[kernels.variants]]
+radius = 1
+time_block_size = 20
+minimum_overlap = 40
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 5120, 6144, 9216, 10240, 13312, 18432.
+[[kernels.variants]]
+radius = 1
+time_block_size = 12
+minimum_overlap = 24
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 2048.
+[[kernels.variants]]
+radius = 1
+time_block_size = 12
+minimum_overlap = 24
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 2
+
+# Target sides: 14336, 15360.
+[[kernels.variants]]
+radius = 1
+time_block_size = 16
+minimum_overlap = 32
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 4096, 7168, 8192, 11264, 12288, 20480.
+[[kernels.variants]]
+radius = 1
+time_block_size = 18
+minimum_overlap = 36
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 19456.
+[[kernels.variants]]
+radius = 1
+time_block_size = 19
+minimum_overlap = 40
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 1024, 16384.
+[[kernels.variants]]
+radius = 1
+time_block_size = 20
+minimum_overlap = 40
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 3072.
+[[kernels.variants]]
+radius = 1
+time_block_size = 12
+minimum_overlap = 24
+group_size = 3
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 17408.
+[[kernels.variants]]
+radius = 1
+time_block_size = 13
+minimum_overlap = 30
+group_size = 3
+leading_load_count = 1
+min_comp_stall = 3
+
+[[kernels]]
+backend = "sass"
+shape = "star"
+dimensions = 3
+arch = ["sm80"]
+
+# Target sides: 256.
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = { x = 6, y = 6 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 384, 512, 640, 768, 896, 1024.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 128.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+# Target sides: 768.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 4 }
+leading_load_count = 1
+min_comp_stall = 3
+
+# Target sides: 128.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 4 }
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 384.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 2, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 896.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 1
+min_comp_stall = 4
+
+# Target sides: 1024.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 640.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 2
+
+# Target sides: 512.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 3
+
+# Target sides: 256.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 12, y = 8 }
+group_size = { x = 3, y = 2 }
+leading_load_count = 1
+min_comp_stall = 3
+
+# Target sides: 64.
+[[kernels.variants]]
+radius = 1
+time_block_size = 4
+minimum_overlap = { x = 8, y = 8 }
+group_size = { x = 1, y = 2 }
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 2
+arch = ["sm80"]
+
+# Target sides: 10240, 14336.
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = 14
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 11264.
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = 14
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 19456.
+[[kernels.variants]]
+radius = 1
+time_block_size = 8
+minimum_overlap = 16
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 13312.
+[[kernels.variants]]
+radius = 1
+time_block_size = 8
+minimum_overlap = 16
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 5120, 7168, 16384, 18432.
+[[kernels.variants]]
+radius = 1
+time_block_size = 10
+minimum_overlap = 20
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 3072.
+[[kernels.variants]]
+radius = 1
+time_block_size = 10
+minimum_overlap = 20
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 9216.
+[[kernels.variants]]
+radius = 1
+time_block_size = 12
+minimum_overlap = 24
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 1024.
+[[kernels.variants]]
+radius = 1
+time_block_size = 12
+minimum_overlap = 24
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 8192, 15360, 17408, 20480.
+[[kernels.variants]]
+radius = 1
+time_block_size = 13
+minimum_overlap = 26
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 4096, 6144.
+[[kernels.variants]]
+radius = 1
+time_block_size = 16
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 2048.
+[[kernels.variants]]
+radius = 1
+time_block_size = 16
+minimum_overlap = 32
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 12288.
+[[kernels.variants]]
+radius = 1
+time_block_size = 18
+minimum_overlap = 36
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 1024, 2048.
+[[kernels.variants]]
+radius = 1
+time_block_size = 8
+minimum_overlap = 16
+group_size = 2
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 11264.
+[[kernels.variants]]
+radius = 1
+time_block_size = 8
+minimum_overlap = 16
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 5120, 8192.
+[[kernels.variants]]
+radius = 1
+time_block_size = 9
+minimum_overlap = 20
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 3072.
+[[kernels.variants]]
+radius = 1
+time_block_size = 10
+minimum_overlap = 20
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 4096, 6144, 7168, 9216, 10240, 12288, 13312, 14336, 15360, 16384, 17408, 18432,
+# 19456, 20480.
+[[kernels.variants]]
+radius = 1
+time_block_size = 7
+minimum_overlap = 16
+group_size = 4
+leading_load_count = 2
+min_comp_stall = 2
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 3
+arch = ["sm80"]
+
+# Target sides: 128, 256, 384, 512, 640, 768, 896, 1024.
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 3
+
+# Target sides: 256.
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 2, y = 1 }
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 128.
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 2, y = 1 }
+leading_load_count = 2
+min_comp_stall = 3
+
+# Target sides: 384, 640, 768, 896, 1024.
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 512.
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 2, y = 2 }
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 192.
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 192.
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 6, y = 4 }
+group_size = { x = 3, y = 1 }
+leading_load_count = 1
+min_comp_stall = 1
+
+# Target sides: 64.
+[[kernels.variants]]
+radius = 1
+time_block_size = 3
+minimum_overlap = { x = 8, y = 6 }
+group_size = { x = 2, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 320.
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 2, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1
+
+# Target sides: 64.
+[[kernels.variants]]
+radius = 1
+time_block_size = 2
+minimum_overlap = { x = 4, y = 4 }
+group_size = { x = 1, y = 1 }
+leading_load_count = 2
+min_comp_stall = 1

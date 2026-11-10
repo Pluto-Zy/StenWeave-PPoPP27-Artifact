@@ -1,0 +1,154 @@
+--- a/README.md
++++ b/README.md
+@@ -19,7 +19,7 @@
+ 
+ ## Run
+ 
+-Requires CUDA 12.1 and an NVIDIA A100 (SM80). Run the following commands from the repository root.
++The retained 2D/3D library path builds for SM80 and SM90 with CUDA 12.8. Correctness and performance must be validated separately on A100 and H100. The legacy 1D example below was originally exercised on an A100.
+ 
+ ### 1D
+ 
+@@ -73,7 +73,7 @@
+     if (argc != 4) return 1; // width radius box|star
+     int width = std::atoi(argv[1]), radius = std::atoi(argv[2]);
+     std::string shape = argv[3];
+-    if (width < 64 || radius < 1 || radius > 3 ||
++    if (width < 64 || radius < 1 || radius > (DIM == 2 ? 15 : 7) ||
+         (shape != "box" && shape != "star")) return 1;
+     int side = 2 * radius + 1, count = 0;
+     size_t points = 1, taps = 1;
+@@ -112,7 +112,7 @@
+ ./2d.out 1024 1 star
+ ```
+ 
+-Arguments: `./2d.out <width> <radius> <box|star>`; the grid is `width × width`.
++Arguments: `./2d.out <width> <radius> <box|star>`; the grid is `width × width`. The retained transform supports effective radius up to 15 in 2D and 7 in 3D.
+ 
+ | Radius | Box | Star |
+ |---:|---|---|
+@@ -133,7 +133,7 @@
+ 
+ Arguments: `./3d.out <width> <radius> <box|star>`; the grid is `width × width × width`. Radius 1 selects Box27P or Star7P.
+ 
+-Entries: `src/3D/Box27P/full_fft/fft_3d.cu` and `src/3D/Star7P/full_fft/fft_3d.cu`. Link one entry; coefficients select the operator. Effective radii 1–3 are supported. See the [3D API](src/3D/common/fft_overlap_save/README.md) for custom coefficients and Pack / Compute / Unpack.
++Entries: `src/3D/Box27P/full_fft/fft_3d.cu` and `src/3D/Star7P/full_fft/fft_3d.cu`. Link one entry; coefficients select the operator. Effective radii 1–7 are supported. See the [3D API](src/3D/common/fft_overlap_save/README.md) for custom coefficients and Pack / Compute / Unpack.
+ 
+ ## Reference
+ 
+--- a/src/2D/common/fft_overlap_save/README.md
++++ b/src/2D/common/fft_overlap_save/README.md
+@@ -1,6 +1,6 @@
+ # FP64 FFT overlap-save 2D backend
+ 
+-This backend executes stencil convolution through a 32×32 complex FFT, a filter-spectrum multiplication, and an inverse FFT. Each one-dimensional FFT uses an 8-point FP64 Tensor Core DFT followed by 4-point butterflies. It supports arbitrary centered correlation coefficients of effective radius 1–3, contiguous square FP64 arrays, periodic boundaries, and widths ≥64. The current executable target is compute capability 8.0; performance was tuned on an A100.
++This backend executes stencil convolution through a 32×32 complex FFT, a filter-spectrum multiplication, and an inverse FFT. Each one-dimensional FFT uses an 8-point FP64 Tensor Core DFT followed by 4-point butterflies. It supports arbitrary centered correlation coefficients of effective radius 1–15, contiguous square FP64 arrays, periodic boundaries, and widths ≥64. The backend targets compute capabilities 8.0 and 9.0; performance must be measured independently per GPU architecture.
+ 
+ There is no global tile-packing buffer, separate packing kernel, output clearing, or `atomicAdd`. Inside the kernel, two real spatial tiles share the real and imaginary parts of one complex FFT. This is an internal encoding; the caller provides ordinary contiguous arrays. Every output point has one writer.
+ 
+@@ -31,7 +31,7 @@
+ 
+ Each plan owns its filter spectrum, so different coefficient sets can coexist. Create, execute, and destroy a plan on its owning device. Complete all work using a plan before destruction. The caller owns input/output arrays and any buffers used to alternate successive iterations.
+ 
+-A single execution applies the supplied effective coefficient matrix once. To fuse several basic time steps, supply their convolved coefficients, with the effective radius still ≤3. For example, three radius-1 Box steps use a radius-3, 7×7 filter. Repeated executions can alternate two output buffers.
++A single execution applies the supplied effective coefficient matrix once. To fuse several basic time steps, supply their convolved coefficients, with the effective radius ≤15. For example, six radius-1 steps use a radius-6, 13×13 filter. Repeated executions can alternate two output buffers.
+ 
+ The code preserves FP64 arithmetic. FFT rounding differs from direct convolution; the comparison uses `abs(error) ≤ 1e-9 + 1e-9*abs(reference)` and also reports maximum absolute error. The earlier shared-memory implementation was validated on an A100 with 86 cases, including asymmetric/signed coefficients, periodic boundaries, and four consecutive execution groups. The backend passed CUDA memcheck, racecheck, initcheck, and synccheck. These tests cover the measured cases; they do not establish correctness for every possible input.
+ 
+--- a/src/2D/common/fft_overlap_save/fft_2d.cu
++++ b/src/2D/common/fft_overlap_save/fft_2d.cu
+@@ -27,11 +27,11 @@
+ struct FlashFFT2DPlan {double2* spectrum=nullptr;int radius=0;int device=-1;};
+ cudaError_t flashfft2dCreatePlan(FlashFFT2DPlan** result,const double* coeff,int radius){
+  if(!result)return cudaErrorInvalidValue;*result=nullptr;
+- if(!coeff||radius<1||radius>3)return cudaErrorInvalidValue;
++ if(!coeff||radius<1||radius>15)return cudaErrorInvalidValue;
+  int k=2*radius+1;for(int i=0;i<k*k;i++)if(!std::isfinite(coeff[i]))return cudaErrorInvalidValue;
+  int device;cudaError_t err=cudaGetDevice(&device);if(err!=cudaSuccess)return err;
+  cudaDeviceProp prop;err=cudaGetDeviceProperties(&prop,device);if(err!=cudaSuccess)return err;
+- // This backend uses FP64 Tensor Core MMA, tuned and verified on A100 (sm_80).
++ // The FP64 MMA and register FFT path targets Ampere and Hopper.
+  if((prop.major!=8&&prop.major!=9)||prop.minor!=0)return cudaErrorNotSupported;
+  static std::mutex init_mutex;
+  {std::lock_guard<std::mutex> lock(init_mutex);int ready=0;err=cudaMemcpyFromSymbol(&ready,flashfft2d_detail::tables_ready,sizeof(ready));if(err!=cudaSuccess)return err;if(!ready){
+--- a/src/2D/common/fft_overlap_save/fft_2d.cuh
++++ b/src/2D/common/fft_overlap_save/fft_2d.cuh
+@@ -1,7 +1,7 @@
+ #pragma once
+ #include <cuda_runtime.h>
+ struct FlashFFT2DPlan;
+-// Host row-major centered correlation coefficients, effective radius 1..3.
++// Host row-major centered correlation coefficients, effective radius 1..15.
+ // The plan owns its device filter spectrum. Call on the device that will execute it.
+ cudaError_t flashfft2dCreatePlan(FlashFFT2DPlan** plan,const double* coefficients,int radius);
+ // FP64 contiguous periodic square grid, width >= 64. Buffers must be disjoint.
+--- a/src/3D/common/fft_overlap_save/README.md
++++ b/src/3D/common/fft_overlap_save/README.md
+@@ -2,7 +2,7 @@
+ 
+ This backend applies a periodic convolution to a contiguous cubic FP64 grid. The retained `FullFFT` backend transforms **all three axes**, multiplies a precomputed filter spectrum, performs the inverse transforms, and stores only the valid overlap-save region. It uses a custom 32×32×16 real/complex FFT, warp butterflies, and block-local shared memory. Execution requires one GPU kernel, with no global packing, output clearing, or atomic accumulation.
+ 
+-The optimization targets Box 27P and Star 7P. Three successive radius-one steps can be fused into one radius-three convolution: Box has 343 nonzero coefficients and Star has 63. The caller supplies the fused coefficients; this API does not perform timestep fusion itself. Arbitrary finite coefficients, including asymmetric coefficients, are supported.
++The optimization targets Box 27P and Star 7P. The caller supplies fused coefficients; this API does not perform timestep fusion itself. Arbitrary finite coefficients, including asymmetric coefficients, are supported. The 32×32×16 transform supports effective radii through 7, subject to the valid output tile remaining nonempty.
+ 
+ Only FullFFT is retained. The XYFFT hybrid implementation has been removed; its enum selector remains for source compatibility and CreatePlan rejects it with `cudaErrorNotSupported`.
+ 
+@@ -27,9 +27,9 @@
+ return status != cudaSuccess ? status : cleanup;
+ ```
+ 
+-The operation is `out[z,y,x] = sum coeff[dz,dy,dx] * in[z+dz,y+dy,x+dx]`, with periodic wrapping. Effective radii 1–3 and widths at least 64 are supported, including widths that do not divide the tile size. Input/output arrays each contain `width³` doubles, with X contiguous; their memory regions must not overlap. Execution is asynchronous on the supplied stream. Synchronize all uses before destroying a plan. Plans own their filter spectra and can coexist with different coefficients on different streams. Create, execute, and destroy on the same CUDA device.
++The operation is `out[z,y,x] = sum coeff[dz,dy,dx] * in[z+dz,y+dy,x+dx]`, with periodic wrapping. Effective radii 1–7 and widths at least 64 are supported, including widths that do not divide the tile size. Input/output arrays each contain `width³` doubles, with X contiguous; their memory regions must not overlap. Execution is asynchronous on the supplied stream. Synchronize all uses before destroying a plan. Plans own their filter spectra and can coexist with different coefficients on different streams. Create, execute, and destroy on the same CUDA device.
+ 
+-The current implementation explicitly supports SM80 devices and was validated on A100-SXM4-80GB with CUDA 12.1. The legacy 3D demo has been removed; use the library API or a stencil-specific FullFFT entry.
++The implementation targets SM80 and SM90. Correctness and performance must be established separately on A100 and H100; compiling a device image alone does not establish SM90 support. The legacy 3D demo has been removed; use the library API or a stencil-specific FullFFT entry.
+ 
+ ## Validation and timing
+ 
+--- a/src/3D/common/fft_overlap_save/fft_3d.cu
++++ b/src/3D/common/fft_overlap_save/fft_3d.cu
+@@ -128,13 +128,13 @@
+ #define INIT_RADIUS(R) \
+  e=cudaFuncSetAttribute(full_fft_kernel<16,32,17,32,false,true,R>,cudaFuncAttributeMaxDynamicSharedMemorySize,2*16*33*17*sizeof(double));if(e!=cudaSuccess)return e; \
+  e=cudaFuncSetAttribute(full_fft_kernel<16,32,17,32,false,true,R,true>,cudaFuncAttributeMaxDynamicSharedMemorySize,2*16*33*17*sizeof(double));if(e!=cudaSuccess)return e;
+- INIT_RADIUS(1) INIT_RADIUS(2) INIT_RADIUS(3)
++ INIT_RADIUS(1) INIT_RADIUS(2) INIT_RADIUS(3) INIT_RADIUS(4) INIT_RADIUS(5) INIT_RADIUS(6) INIT_RADIUS(7)
+ #undef INIT_RADIUS
+  ready=1;return cudaMemcpyToSymbol(tables_ready,&ready,sizeof(ready));
+ }
+ cudaError_t flashfft3dCreatePlan(FlashFFT3DPlan** result,const double*coeff,int radius,FlashFFT3DBackend backend){
+  if(!result)return cudaErrorInvalidValue;*result=nullptr;
+- if(!coeff||radius<1||radius>3)return cudaErrorInvalidValue;
++ if(!coeff||radius<1||radius>7)return cudaErrorInvalidValue;
+  // Preserve the legacy selector, but never silently substitute another algorithm.
+  if(backend==FlashFFT3DBackend::XYFFT)return cudaErrorNotSupported;
+  if(backend!=FlashFFT3DBackend::FullFFT)return cudaErrorInvalidValue;
+@@ -170,7 +170,7 @@
+  long long count=planeCount*slices;
+ #define EXEC_RADIUS(R) \
+  case R:full_fft_kernel<16,32,17,32,false,true,R><<<static_cast<unsigned>(count),1024,2*16*33*17*sizeof(double),stream>>>(input,output,width,R,plan->spectrum);break;
+- switch(plan->radius){EXEC_RADIUS(1) EXEC_RADIUS(2) EXEC_RADIUS(3) default:return cudaErrorInvalidValue;}
++ switch(plan->radius){EXEC_RADIUS(1) EXEC_RADIUS(2) EXEC_RADIUS(3) EXEC_RADIUS(4) EXEC_RADIUS(5) EXEC_RADIUS(6) EXEC_RADIUS(7) default:return cudaErrorInvalidValue;}
+ #undef EXEC_RADIUS
+  return cudaGetLastError();
+ }
+@@ -207,7 +207,7 @@
+  cudaError_t e=validateSplit(plan,workspace);if(e!=cudaSuccess)return e;
+  using namespace flashfft3d_detail;
+ #define SPLIT_RADIUS(R) case R:full_fft_kernel<16,32,17,32,false,true,R,true><<<workspace->count,1024,2*16*33*17*sizeof(double),stream>>>(workspace->input,workspace->output,workspace->width,R,plan->spectrum);break;
+- switch(plan->radius){SPLIT_RADIUS(1) SPLIT_RADIUS(2) SPLIT_RADIUS(3) default:return cudaErrorInvalidValue;}
++ switch(plan->radius){SPLIT_RADIUS(1) SPLIT_RADIUS(2) SPLIT_RADIUS(3) SPLIT_RADIUS(4) SPLIT_RADIUS(5) SPLIT_RADIUS(6) SPLIT_RADIUS(7) default:return cudaErrorInvalidValue;}
+ #undef SPLIT_RADIUS
+  return cudaGetLastError();
+ }
+--- a/src/3D/common/fft_overlap_save/fft_3d.cuh
++++ b/src/3D/common/fft_overlap_save/fft_3d.cuh
+@@ -6,7 +6,7 @@
+ // CreatePlan returns cudaErrorNotSupported for it; only FullFFT is implemented.
+ enum class FlashFFT3DBackend { FullFFT, XYFFT };
+ 
+-// coeff[z][y][x], side=2*radius+1. Executes one periodic FP64 convolution.
++// coeff[z][y][x], side=2*radius+1, effective radius 1..7. Executes one periodic FP64 convolution.
+ // FullFFT transforms all three axes. Input/output contain width^3 doubles.
+ cudaError_t flashfft3dCreatePlan(FlashFFT3DPlan** result, const double* coeff,
+                                int radius,

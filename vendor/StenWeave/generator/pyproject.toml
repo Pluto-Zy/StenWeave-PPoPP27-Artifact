@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stencil-codegen"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pyelftools", "tomli; python_version < '3.11'"]
+
+[project.scripts]
+stencil-codegen = "codegen.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["codegen*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+# Generated SM90 encoding tables retain their upstream layout.
+extend-exclude = ["codegen/sass/assembler90.py"]
+force-exclude = true
+
+[tool.ruff.lint]
+extend-select = ["B", "I", "PGH", "RUF", "UP"]
+ignore = ["UP032"]
+
+[tool.setuptools.package-data]
+codegen = ["templates/*/*.template"]

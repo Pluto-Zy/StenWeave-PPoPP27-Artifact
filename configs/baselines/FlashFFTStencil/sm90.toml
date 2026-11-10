@@ -1,0 +1,78 @@
+# FlashFFTStencil FP64 configurations.
+arch = "sm90"
+input = "zero"
+coefficients = "stenweave"
+steps = 1000
+warmups = 1
+repeats_2d = 5
+repeats_3d = 3
+
+[stencils.star2d1r]
+dim = 2
+shape = "star"
+radius = 1
+fusion = 6
+width = 16384
+
+[stencils.star2d2r]
+dim = 2
+shape = "star"
+radius = 2
+fusion = 3
+width = 16384
+
+[stencils.star2d3r]
+dim = 2
+shape = "star"
+radius = 3
+fusion = 2
+width = 16384
+
+[stencils.box2d1r]
+dim = 2
+shape = "box"
+radius = 1
+fusion = 6
+width = 16384
+
+[stencils.box2d2r]
+dim = 2
+shape = "box"
+radius = 2
+fusion = 3
+width = 16384
+
+[stencils.box2d3r]
+dim = 2
+shape = "box"
+radius = 3
+fusion = 2
+width = 16384
+
+[stencils.star3d1r]
+dim = 3
+shape = "star"
+radius = 1
+fusion = 4
+width = 768
+
+[stencils.star3d2r]
+dim = 3
+shape = "star"
+radius = 2
+fusion = 2
+width = 768
+
+[stencils.star3d3r]
+dim = 3
+shape = "star"
+radius = 3
+fusion = 1
+width = 768
+
+[stencils.box3d1r]
+dim = 3
+shape = "box"
+radius = 1
+fusion = 4
+width = 768

@@ -1,0 +1,107 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c0a8fd0..d0c5dbb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,7 @@ set(
+ )
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${LORA_STENCIL_RUNTIME_OUTPUT_DIRECTORY}")
+ set(CMAKE_CUDA_ARCHITECTURES "${LORA_STENCIL_CUDA_ARCHITECTURES}")
++set(LORA_STENCIL_TUNING_CUDA_FLAGS "" CACHE STRING "Additional CUDA flags for autotuning.")
+ 
+ set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CUDA_STANDARD 17)
+@@ -35,7 +36,7 @@ function(configure_lorastencil_target target)
+         CUDA_ARCHITECTURES "${LORA_STENCIL_CUDA_ARCHITECTURES}"
+         RUNTIME_OUTPUT_DIRECTORY "${LORA_STENCIL_RUNTIME_OUTPUT_DIRECTORY}")
+     target_compile_options(${target} PRIVATE
+-        $<$<COMPILE_LANGUAGE:CUDA>:-O3;-lineinfo;--use_fast_math;--ptxas-options=-v>)
++        $<$<COMPILE_LANGUAGE:CUDA>:-O3;-lineinfo;--use_fast_math;--ptxas-options=-v;${LORA_STENCIL_TUNING_CUDA_FLAGS}>)
+ endfunction()
+ 
+ add_executable(
+diff --git a/src/2d/gpu.cu b/src/2d/gpu.cu
+index f3f45d2..07f3fdd 100644
+--- a/src/2d/gpu.cu
++++ b/src/2d/gpu.cu
+@@ -6,16 +6,24 @@
+ 
+ using namespace nvcuda;
+ 
++#ifndef BLOCK_SIZE_ROW
+ #define BLOCK_SIZE_ROW 32
++#endif
++#ifndef BLOCK_SIZE_COL
+ #define BLOCK_SIZE_COL 64
++#endif
++#ifndef HALO
+ #define HALO 4
++#endif
+ #define D_BLOCK_SIZE_ROW (BLOCK_SIZE_ROW + HALO * 2)
+ #define D_BLOCK_SIZE_COL (BLOCK_SIZE_COL + HALO * 2 + 4 )
+ #define D_BLOCK_SIZE_COL_NOPAD (BLOCK_SIZE_COL + HALO * 2)
+ #define TENSOR_CORE_M 8
+ #define TENSOR_CORE_N 4
+ #define IDX(x, y, ldm) ((x) * (ldm) + (y))
++#ifndef WARP_PER_BLOCK
+ #define WARP_PER_BLOCK 8
++#endif
+ #define CALC_NUM 4
+ #define DATA_NUM 5
+ 
+diff --git a/src/3d/gpu_box.cu b/src/3d/gpu_box.cu
+index 2e3d321..a8180c6 100644
+--- a/src/3d/gpu_box.cu
++++ b/src/3d/gpu_box.cu
+@@ -5,11 +5,21 @@
+ 
+ using namespace nvcuda;
+ 
++#ifndef HALO
+ #define HALO 4
++#endif
++#ifndef ROW_HALO
+ #define ROW_HALO 2
++#endif
++#ifndef WARP_PER_BLOCK
+ #define WARP_PER_BLOCK 8
++#endif
++#ifndef BLOCK_SIZE_ROW
+ #define BLOCK_SIZE_ROW 8
++#endif
++#ifndef BLOCK_SIZE_COL
+ #define BLOCK_SIZE_COL 64
++#endif
+ #define D_BLOCK_SIZE_ROW (BLOCK_SIZE_ROW + ROW_HALO * 2)
+ #define D_BLOCK_SIZE_COL (BLOCK_SIZE_COL + HALO * 2)
+ #define IDX2D(x, y, ldm) ((x) * (ldm) + (y))
+@@ -224,4 +234,3 @@ void gpu_box_3d1r(const double *__restrict__ in, double *__restrict__ out, const
+ 
+ 
+ }
+-
+diff --git a/src/3d/gpu_star.cu b/src/3d/gpu_star.cu
+index 5ed895a..61f814f 100644
+--- a/src/3d/gpu_star.cu
++++ b/src/3d/gpu_star.cu
+@@ -5,11 +5,21 @@
+ 
+ using namespace nvcuda;
+ 
++#ifndef HALO
+ #define HALO 4
++#endif
++#ifndef ROW_HALO
+ #define ROW_HALO 2
++#endif
++#ifndef WARP_PER_BLOCK
+ #define WARP_PER_BLOCK 8
++#endif
++#ifndef BLOCK_SIZE_ROW
+ #define BLOCK_SIZE_ROW 8
++#endif
++#ifndef BLOCK_SIZE_COL
+ #define BLOCK_SIZE_COL 64
++#endif
+ #define D_BLOCK_SIZE_ROW (BLOCK_SIZE_ROW + ROW_HALO * 2)
+ #define D_BLOCK_SIZE_COL (BLOCK_SIZE_COL + HALO * 2)
+ #define IDX2D(x, y, ldm) ((x) * (ldm) + (y))

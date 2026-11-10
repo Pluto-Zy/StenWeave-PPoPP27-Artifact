@@ -1,0 +1,188 @@
+schema_version = 2
+seed = 42
+
+[defaults.run]
+warmup_runs = 0
+repeat_runs = 1
+check = false
+cooldown_ms = 500
+
+[[case]]
+name = "star2d1r-sm80-sass"
+[case.kernel]
+id = "32a15d362c1d92d95b00f8a2"
+[case.run]
+block = { x = 768 }
+bands = [{ repeat = 1, grid = { x = 216 }, stream = 2275 }]
+time_steps = 11
+
+[[case]]
+name = "star2d1r-sm80-sass-ilp"
+[case.kernel]
+id = "01ed097e336d528609dce3b1"
+[case.run]
+block = { x = 256 }
+bands = [{ repeat = 1, grid = { x = 216 }, stream = 2275 }]
+time_steps = 13
+
+[[case]]
+name = "star2d2r-sm80-sass"
+[case.kernel]
+id = "b20f567a2fb9ea17247ce7aa"
+[case.run]
+block = { x = 512 }
+bands = [{ repeat = 1, grid = { x = 108 }, stream = 6144 }]
+time_steps = 10
+
+[[case]]
+name = "star2d2r-sm80-sass-ilp"
+[case.kernel]
+id = "ba2ffb86833549042705fe67"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 216 }, stream = 2048 }]
+time_steps = 7
+
+[[case]]
+name = "star2d3r-sm80-sass"
+[case.kernel]
+id = "1718d19120ae8bf83088516a"
+[case.run]
+block = { x = 512 }
+bands = [{ repeat = 1, grid = { x = 108 }, stream = 6144 }]
+time_steps = 6
+
+[[case]]
+name = "star2d3r-sm80-sass-ilp"
+[case.kernel]
+id = "12b37956a188cb6bf20cd112"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 216 }, stream = 2048 }]
+time_steps = 5
+
+[[case]]
+name = "star3d1r-sm80-sass"
+[case.kernel]
+id = "dea1f74ef484c05d25045173"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 18, y = 12 }, stream = 512 }]
+time_steps = 4
+
+[[case]]
+name = "star3d1r-sm80-sass-ilp"
+[case.kernel]
+id = "795125c1b85223cc03e1e736"
+[case.run]
+block = { x = 32, y = 16 }
+bands = [{ repeat = 1, grid = { x = 12, y = 9 }, stream = 280 }]
+time_steps = 4
+
+[[case]]
+name = "star3d2r-sm80-sass"
+[case.kernel]
+id = "af9d0224b56cfc06fbf9f69e"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 18, y = 12 }, stream = 384 }]
+time_steps = 2
+
+[[case]]
+name = "star3d2r-sm80-sass-ilp"
+[case.kernel]
+id = "db9e7bc30cc79b1332cce3ec"
+[case.run]
+block = { x = 16, y = 24 }
+bands = [{ repeat = 1, grid = { x = 18, y = 6 }, stream = 384 }]
+time_steps = 3
+
+[[case]]
+name = "star3d3r-sm80-sass"
+[case.kernel]
+id = "06a892c21d33043ac3ba34a1"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 18, y = 12 }, stream = 640 }]
+time_steps = 2
+
+[[case]]
+name = "star3d3r-sm80-sass-ilp"
+[case.kernel]
+id = "a83c42a089079f7786691804"
+[case.run]
+block = { x = 16, y = 24 }
+bands = [{ repeat = 1, grid = { x = 18, y = 6 }, stream = 640 }]
+time_steps = 2
+
+[[case]]
+name = "box2d1r-sm80-sass"
+[case.kernel]
+id = "01fabb62ddc986d4eef7fdfd"
+[case.run]
+block = { x = 768 }
+bands = [{ repeat = 1, grid = { x = 216 }, stream = 2048 }]
+time_steps = 8
+
+[[case]]
+name = "box2d1r-sm80-sass-ilp"
+[case.kernel]
+id = "6d4f8a74026c1960238f9db3"
+[case.run]
+block = { x = 384 }
+bands = [{ repeat = 1, grid = { x = 216 }, stream = 2048 }]
+time_steps = 9
+
+[[case]]
+name = "box2d2r-sm80-sass"
+[case.kernel]
+id = "9b3252ca751e633743fc5b21"
+[case.run]
+block = { x = 1024 }
+bands = [{ repeat = 1, grid = { x = 108 }, stream = 3072 }]
+time_steps = 4
+
+[[case]]
+name = "box2d2r-sm80-sass-ilp"
+[case.kernel]
+id = "84956f6a0c28cdee5a5dc629"
+[case.run]
+block = { x = 512 }
+bands = [{ repeat = 1, grid = { x = 108 }, stream = 2048 }]
+time_steps = 3
+
+[[case]]
+name = "box2d3r-sm80-sass"
+[case.kernel]
+id = "8a874d6c852734acae306efc"
+[case.run]
+block = { x = 1024 }
+bands = [{ repeat = 1, grid = { x = 108 }, stream = 3413 }]
+time_steps = 3
+
+[[case]]
+name = "box2d3r-sm80-sass-ilp"
+[case.kernel]
+id = "f780efddf2a38f3ac70044aa"
+[case.run]
+block = { x = 512 }
+bands = [{ repeat = 1, grid = { x = 108 }, stream = 2275 }]
+time_steps = 2
+
+[[case]]
+name = "box3d1r-sm80-sass"
+[case.kernel]
+id = "03e407c371db7147649eeb2f"
+[case.run]
+block = { x = 32, y = 32 }
+bands = [{ repeat = 1, grid = { x = 36, y = 9 }, stream = 344 }]
+time_steps = 2
+
+[[case]]
+name = "box3d1r-sm80-sass-ilp"
+[case.kernel]
+id = "c778bdb7e32dd6cd2f19a548"
+[case.run]
+block = { x = 32, y = 20 }
+bands = [{ repeat = 1, grid = { x = 18, y = 6 }, stream = 320 }]
+time_steps = 2

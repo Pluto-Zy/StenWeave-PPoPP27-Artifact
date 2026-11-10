@@ -1,0 +1,192 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 255f0f3..e039d08 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,7 @@ set(
+ )
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CONV_STENCIL_RUNTIME_OUTPUT_DIRECTORY}")
+ set(CMAKE_CUDA_ARCHITECTURES "${CONV_STENCIL_CUDA_ARCHITECTURES}")
++set(CONV_STENCIL_TUNING_CUDA_FLAGS "" CACHE STRING "Additional CUDA flags for autotuning.")
+ 
+ set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CUDA_STANDARD 14)
+@@ -66,7 +67,7 @@ function(configure_convstencil_target target)
+         CUDA_ARCHITECTURES "${CONV_STENCIL_CUDA_ARCHITECTURES}"
+         RUNTIME_OUTPUT_DIRECTORY "${CONV_STENCIL_RUNTIME_OUTPUT_DIRECTORY}")
+     target_compile_options(${target} PRIVATE
+-        $<$<COMPILE_LANGUAGE:CUDA>:-O3;-lineinfo;--use_fast_math>)
++        $<$<COMPILE_LANGUAGE:CUDA>:-O3;-lineinfo;--use_fast_math;${CONV_STENCIL_TUNING_CUDA_FLAGS}>)
+ 
+     if(CONV_NEEDS_CUDNN)
+         target_link_libraries(${target} PRIVATE "${CUDNN_LIBRARY}")
+diff --git a/src/2d/2d_utils.h b/src/2d/2d_utils.h
+index 9327fa8..192629e 100644
+--- a/src/2d/2d_utils.h
++++ b/src/2d/2d_utils.h
+@@ -72,6 +72,8 @@ enum Shape
+     box_2d1r,
+     star_2d3r,
+     box_2d3r,
++    // The checker in main.cu refers to the historical step3 spelling.
++    box_2d1r_step3 = box_2d1r,
+ };
+ 
+ void gpu_box_2d1r(const double * __restrict__ in, double * __restrict__ out, const double * __restrict__ params, const int time, const int input_m, const int input_n);
+@@ -84,4 +86,4 @@ void gpu_box_2d1r_breakdown3(const double * __restrict__ in, double * __restrict
+ 
+ void gpu_box_2d1r_breakdown2(const double * __restrict__ in, double * __restrict__ out, const double * __restrict__ params, const int time, const int input_m, const int input_n);
+ 
+-void gpu_box_2d1r_breakdown1(const double * __restrict__ in, double * __restrict__ out, const double * __restrict__ params, const int time, const int input_m, const int input_n);
+\ No newline at end of file
++void gpu_box_2d1r_breakdown1(const double * __restrict__ in, double * __restrict__ out, const double * __restrict__ params, const int time, const int input_m, const int input_n);
+diff --git a/src/2d/gpu.cu b/src/2d/gpu.cu
+index a99c844..eed669f 100644
+--- a/src/2d/gpu.cu
++++ b/src/2d/gpu.cu
+@@ -8,20 +8,34 @@
+ 
+ using namespace nvcuda;
+ 
++#ifndef BLOCK_SIZE_ROW
+ #define BLOCK_SIZE_ROW 32
++#endif
++#ifndef BLOCK_SIZE_COL
+ #define BLOCK_SIZE_COL 64
++#endif
++#ifndef HALO
+ #define HALO 3
++#endif
+ #define D_BLOCK_SIZE_COL (BLOCK_SIZE_COL + HALO * 2)
+ #define D_BLOCK_SIZE_ROW (BLOCK_SIZE_ROW + HALO * 2)
++#ifndef PAD
+ #define PAD 2
++#endif
+ #define SM_SIZE_COL (7 * D_BLOCK_SIZE_ROW + PAD)
+ #define SM_SIZE_ROW (D_BLOCK_SIZE_COL / 8)
++#ifndef UNIT_LENGTH
+ #define UNIT_LENGTH 7
++#endif
+ #define TENSOR_CORE_M 8
+ #define IDX(x, y, ldm) ((x) * (ldm) + (y))
++#ifndef WARP_PER_BLOCK
+ #define WARP_PER_BLOCK 8
++#endif
+ // #define ACCS_PER_WARP (BLOCK_SIZE_COL * BLOCK_SIZE_ROW / 64 / WARP_PER_BLOCK)
++#ifndef MMA_NUM
+ #define MMA_NUM 13
++#endif
+ #define ceild(n,d)	(((n)-1)/(d) + 1)
+ 
+ __constant__ double param_matrix_d[2 * 52 * TENSOR_CORE_M];
+diff --git a/src/3d/3d_utils.h b/src/3d/3d_utils.h
+index ce0df68..961ff73 100644
+--- a/src/3d/3d_utils.h
++++ b/src/3d/3d_utils.h
+@@ -70,6 +70,9 @@ enum Shape
+ {
+     box_3d1r,
+     star_3d1r,
++    // Historical names retained for the optional CPU checker.
++    box_3d1r_step3 = box_3d1r,
++    star_3d1r_step3 = star_3d1r,
+ };
+ 
+ void gpu_box_3d1r(const double * __restrict__ in, double * __restrict__ out, const double * __restrict__ params, const int times, const int input_h, const int input_m, const int input_n);
+@@ -82,4 +85,4 @@ void gpu_box_3d1r_breakdown3(const double * __restrict__ in, double * __restrict
+ 
+ void gpu_box_3d1r_breakdown2(const double * __restrict__ in, double * __restrict__ out, const double * __restrict__ params, const int times, const int input_h, const int input_m, const int input_n);
+ 
+-void gpu_box_3d1r_breakdown1(const double * __restrict__ in, double * __restrict__ out, const double * __restrict__ params, const int times, const int input_h, const int input_m, const int input_n);
+\ No newline at end of file
++void gpu_box_3d1r_breakdown1(const double * __restrict__ in, double * __restrict__ out, const double * __restrict__ params, const int times, const int input_h, const int input_m, const int input_n);
+diff --git a/src/3d/gpu_box.cu b/src/3d/gpu_box.cu
+index e9fbef3..d793d48 100644
+--- a/src/3d/gpu_box.cu
++++ b/src/3d/gpu_box.cu
+@@ -5,19 +5,33 @@
+ 
+ using namespace nvcuda;
+ 
++#ifndef BLOCK_SIZE_ROW
+ #define BLOCK_SIZE_ROW 8
++#endif
++#ifndef BLOCK_SIZE_COL
+ #define BLOCK_SIZE_COL 64
++#endif
++#ifndef HALO
+ #define HALO 3
++#endif
++#ifndef UNIT_LENGTH
+ #define UNIT_LENGTH 7
++#endif
+ #define D_BLOCK_SIZE_COL (BLOCK_SIZE_COL + HALO * 2)
+ #define D_BLOCK_SIZE_ROW (BLOCK_SIZE_ROW + HALO * 2)
++#ifndef PAD
+ #define PAD 2
++#endif
+ #define SM_SIZE_COL (UNIT_LENGTH * D_BLOCK_SIZE_ROW + PAD)
+ #define SM_SIZE_ROW (D_BLOCK_SIZE_COL / (UNIT_LENGTH + 1))
++#ifndef WARP_PER_BLOCK
+ #define WARP_PER_BLOCK 8
++#endif
+ #define COL_PER_WARP (BLOCK_SIZE_ROW / WARP_PER_BLOCK * UNIT_LENGTH)
+ #define TENSOR_CORE_M 8
++#ifndef MMA_NUM
+ #define MMA_NUM 13
++#endif
+ #define IDX2D(x, y, ldm) ((x) * (ldm) + (y))
+ #define IDX3D(x, y, z, rows, cols) ((x) * (rows) * (cols) + (y) * (cols) + (z))
+ 
+@@ -902,4 +916,4 @@ void gpu_box_3d1r_breakdown1(const double * __restrict__ in, double * __restrict
+     CUDA_CHECK(cudaMemcpy(out, array_d[i % 2], array_size, cudaMemcpyDeviceToHost));
+ 
+     return;
+-}
+\ No newline at end of file
++}
+diff --git a/src/3d/gpu_star.cu b/src/3d/gpu_star.cu
+index e00a4fd..a2d4834 100644
+--- a/src/3d/gpu_star.cu
++++ b/src/3d/gpu_star.cu
+@@ -5,20 +5,34 @@
+ 
+ using namespace nvcuda;
+ 
++#ifndef BLOCK_SIZE_ROW
+ #define BLOCK_SIZE_ROW 8
++#endif
++#ifndef BLOCK_SIZE_COL
+ #define BLOCK_SIZE_COL 64
++#endif
++#ifndef HALO
+ #define HALO 3
++#endif
++#ifndef UNIT_LENGTH
+ #define UNIT_LENGTH 7
++#endif
+ #define D_BLOCK_SIZE_COL (BLOCK_SIZE_COL + HALO * 2)
+ #define D_BLOCK_SIZE_ROW (BLOCK_SIZE_ROW + HALO * 2)
++#ifndef PAD
+ #define PAD 2
++#endif
+ #define SM_SIZE_COL (UNIT_LENGTH * D_BLOCK_SIZE_ROW + PAD)
+ #define SM_SIZE_ROW (D_BLOCK_SIZE_COL / (UNIT_LENGTH + 1))
+ #define SM_DIFF (SM_SIZE_ROW * SM_SIZE_COL - D_BLOCK_SIZE_ROW * D_BLOCK_SIZE_COL)
++#ifndef WARP_PER_BLOCK
+ #define WARP_PER_BLOCK 8
++#endif
+ #define COL_PER_WARP (BLOCK_SIZE_ROW / WARP_PER_BLOCK * UNIT_LENGTH)
+ #define TENSOR_CORE_M 8
++#ifndef MMA_NUM
+ #define MMA_NUM 13
++#endif
+ #define IDX2D(x, y, ldm) ((x) * (ldm) + (y))
+ #define IDX3D(x, y, z, rows, cols) ((x) * (rows) * (cols) + (y) * (cols) + (z))
+ 
+@@ -329,4 +343,4 @@ void gpu_star_3d1r(const double * __restrict__ in, double * __restrict__ out, co
+     CUDA_CHECK(cudaMemcpy(out, array_d[i % 2], array_size, cudaMemcpyDeviceToHost));
+ 
+     return;
+-}
+\ No newline at end of file
++}

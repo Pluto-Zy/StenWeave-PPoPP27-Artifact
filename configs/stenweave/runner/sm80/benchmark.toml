@@ -1,0 +1,310 @@
+schema_version = 2
+seed = 42
+
+[defaults.run]
+warmup_runs = 0
+repeat_runs = 20
+measurement_runs = 15
+measurement_statistic = "mean"
+check = false
+cooldown_ms = 500
+
+[[case]]
+name = "star2d1r-sm80-cuda"
+[case.kernel]
+id = "3208119198ba8250d2255cb3"
+[case.run]
+block = { x = 768 }
+domain = { x = 17880, y = 20475 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2275 }]
+time_steps = 11
+
+[[case]]
+name = "star2d1r-sm80-sass"
+[case.kernel]
+id = "32a15d362c1d92d95b00f8a2"
+[case.run]
+block = { x = 768 }
+domain = { x = 17880, y = 20475 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2275 }]
+time_steps = 11
+
+[[case]]
+name = "star2d1r-sm80-sass-ilp"
+[case.kernel]
+id = "01ed097e336d528609dce3b1"
+[case.run]
+block = { x = 256 }
+domain = { x = 17742, y = 20475 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2275 }]
+time_steps = 26
+
+[[case]]
+name = "star2d2r-sm80-cuda"
+[case.kernel]
+id = "5392897f47e2caa1e5aa80dc"
+[case.run]
+block = { x = 512 }
+domain = { x = 17032, y = 18432 }
+bands = [{ repeat = 3, grid = { x = 36 }, stream = 6144 }]
+time_steps = 10
+
+[[case]]
+name = "star2d2r-sm80-sass"
+[case.kernel]
+id = "b20f567a2fb9ea17247ce7aa"
+[case.run]
+block = { x = 512 }
+domain = { x = 17032, y = 18432 }
+bands = [{ repeat = 3, grid = { x = 36 }, stream = 6144 }]
+time_steps = 10
+
+[[case]]
+name = "star2d2r-sm80-sass-ilp"
+[case.kernel]
+id = "ba2ffb86833549042705fe67"
+[case.run]
+block = { x = 384 }
+domain = { x = 17696, y = 18432 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2048 }]
+time_steps = 14
+
+[[case]]
+name = "star2d3r-sm80-cuda"
+[case.kernel]
+id = "f6fbfd13f7eaa7eb6439be93"
+[case.run]
+block = { x = 512 }
+domain = { x = 17172, y = 18432 }
+bands = [{ repeat = 3, grid = { x = 36 }, stream = 6144 }]
+time_steps = 12
+
+[[case]]
+name = "star2d3r-sm80-sass"
+[case.kernel]
+id = "1718d19120ae8bf83088516a"
+[case.run]
+block = { x = 512 }
+domain = { x = 17172, y = 18432 }
+bands = [{ repeat = 3, grid = { x = 36 }, stream = 6144 }]
+time_steps = 12
+
+[[case]]
+name = "star2d3r-sm80-sass-ilp"
+[case.kernel]
+id = "12b37956a188cb6bf20cd112"
+[case.run]
+block = { x = 384 }
+domain = { x = 17696, y = 18432 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2048 }]
+time_steps = 10
+
+[[case]]
+name = "star3d1r-sm80-cuda"
+[case.kernel]
+id = "0ea0159aed5e7110f2dda36e"
+[case.run]
+block = { x = 32, y = 32 }
+domain = { x = 440, y = 296, z = 512 }
+bands = [{ repeat = 1, grid = { x = 18, y = 12 }, stream = 512 }]
+time_steps = 40
+
+[[case]]
+name = "star3d1r-sm80-sass"
+[case.kernel]
+id = "dea1f74ef484c05d25045173"
+[case.run]
+block = { x = 32, y = 32 }
+domain = { x = 440, y = 296, z = 512 }
+bands = [{ repeat = 1, grid = { x = 18, y = 12 }, stream = 512 }]
+time_steps = 40
+
+[[case]]
+name = "star3d1r-sm80-sass-ilp"
+[case.kernel]
+id = "795125c1b85223cc03e1e736"
+[case.run]
+block = { x = 32, y = 16 }
+domain = { x = 344, y = 224, z = 560 }
+bands = [{ repeat = 2, grid = { x = 6, y = 9 }, stream = 280 }]
+time_steps = 72
+
+[[case]]
+name = "star3d2r-sm80-cuda"
+[case.kernel]
+id = "b683e28d098de0b3c2227738"
+[case.run]
+block = { x = 32, y = 32 }
+domain = { x = 440, y = 296, z = 384 }
+bands = [{ repeat = 1, grid = { x = 18, y = 12 }, stream = 384 }]
+time_steps = 28
+
+[[case]]
+name = "star3d2r-sm80-sass"
+[case.kernel]
+id = "af9d0224b56cfc06fbf9f69e"
+[case.run]
+block = { x = 32, y = 32 }
+domain = { x = 440, y = 296, z = 384 }
+bands = [{ repeat = 1, grid = { x = 18, y = 12 }, stream = 384 }]
+time_steps = 28
+
+[[case]]
+name = "star3d2r-sm80-sass-ilp"
+[case.kernel]
+id = "db9e7bc30cc79b1332cce3ec"
+[case.run]
+block = { x = 16, y = 24 }
+domain = { x = 372, y = 228, z = 384 }
+bands = [{ repeat = 1, grid = { x = 18, y = 6 }, stream = 384 }]
+time_steps = 51
+
+[[case]]
+name = "star3d3r-sm80-cuda"
+[case.kernel]
+id = "84fd15e028e7cfb94ee03ac5"
+[case.run]
+block = { x = 32, y = 32 }
+domain = { x = 372, y = 252, z = 640 }
+bands = [{ repeat = 1, grid = { x = 18, y = 12 }, stream = 640 }]
+time_steps = 12
+
+[[case]]
+name = "star3d3r-sm80-sass"
+[case.kernel]
+id = "06a892c21d33043ac3ba34a1"
+[case.run]
+block = { x = 32, y = 32 }
+domain = { x = 372, y = 252, z = 640 }
+bands = [{ repeat = 1, grid = { x = 18, y = 12 }, stream = 640 }]
+time_steps = 12
+
+[[case]]
+name = "star3d3r-sm80-sass-ilp"
+[case.kernel]
+id = "a83c42a089079f7786691804"
+[case.run]
+block = { x = 16, y = 24 }
+domain = { x = 372, y = 228, z = 640 }
+bands = [{ repeat = 1, grid = { x = 18, y = 6 }, stream = 640 }]
+time_steps = 22
+
+[[case]]
+name = "box2d1r-sm80-cuda"
+[case.kernel]
+id = "6e9237bf036faa97d92c894b"
+[case.run]
+block = { x = 768 }
+domain = { x = 18064, y = 18432 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2048 }]
+time_steps = 16
+
+[[case]]
+name = "box2d1r-sm80-sass"
+[case.kernel]
+id = "01fabb62ddc986d4eef7fdfd"
+[case.run]
+block = { x = 768 }
+domain = { x = 18064, y = 18432 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2048 }]
+time_steps = 16
+
+[[case]]
+name = "box2d1r-sm80-sass-ilp"
+[case.kernel]
+id = "6d4f8a74026c1960238f9db3"
+[case.run]
+block = { x = 384 }
+domain = { x = 17972, y = 18432 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2048 }]
+time_steps = 18
+
+[[case]]
+name = "box2d2r-sm80-cuda"
+[case.kernel]
+id = "d320c6c91446005c32932ed2"
+[case.run]
+block = { x = 1024 }
+domain = { x = 18160, y = 18432 }
+bands = [{ repeat = 6, grid = { x = 18 }, stream = 3072 }]
+time_steps = 4
+
+[[case]]
+name = "box2d2r-sm80-sass"
+[case.kernel]
+id = "9b3252ca751e633743fc5b21"
+[case.run]
+block = { x = 1024 }
+domain = { x = 18160, y = 18432 }
+bands = [{ repeat = 6, grid = { x = 18 }, stream = 3072 }]
+time_steps = 4
+
+[[case]]
+name = "box2d2r-sm80-sass-ilp"
+[case.kernel]
+id = "84956f6a0c28cdee5a5dc629"
+[case.run]
+block = { x = 512 }
+domain = { x = 18300, y = 18432 }
+bands = [{ repeat = 9, grid = { x = 12 }, stream = 2048 }]
+time_steps = 6
+
+[[case]]
+name = "box2d3r-sm80-cuda"
+[case.kernel]
+id = "f6bc39934ffbe147e688ee40"
+[case.run]
+block = { x = 1024 }
+domain = { x = 18126, y = 20478 }
+bands = [{ repeat = 6, grid = { x = 18 }, stream = 3413 }]
+time_steps = 3
+
+[[case]]
+name = "box2d3r-sm80-sass"
+[case.kernel]
+id = "8a874d6c852734acae306efc"
+[case.run]
+block = { x = 1024 }
+domain = { x = 18126, y = 20478 }
+bands = [{ repeat = 6, grid = { x = 18 }, stream = 3413 }]
+time_steps = 3
+
+[[case]]
+name = "box2d3r-sm80-sass-ilp"
+[case.kernel]
+id = "f780efddf2a38f3ac70044aa"
+[case.run]
+block = { x = 512 }
+domain = { x = 18300, y = 20475 }
+bands = [{ repeat = 9, grid = { x = 12 }, stream = 2275 }]
+time_steps = 2
+
+[[case]]
+name = "box3d1r-sm80-cuda"
+[case.kernel]
+id = "e401dc077e741b6f58a04edc"
+[case.run]
+block = { x = 32, y = 32 }
+domain = { x = 508, y = 256, z = 688 }
+bands = [{ repeat = 2, grid = { x = 18, y = 9 }, stream = 344 }]
+time_steps = 14
+
+[[case]]
+name = "box3d1r-sm80-sass"
+[case.kernel]
+id = "03e407c371db7147649eeb2f"
+[case.run]
+block = { x = 32, y = 32 }
+domain = { x = 508, y = 256, z = 688 }
+bands = [{ repeat = 2, grid = { x = 18, y = 9 }, stream = 344 }]
+time_steps = 14
+
+[[case]]
+name = "box3d1r-sm80-sass-ilp"
+[case.kernel]
+id = "c778bdb7e32dd6cd2f19a548"
+[case.run]
+block = { x = 32, y = 20 }
+domain = { x = 544, y = 220, z = 640 }
+bands = [{ repeat = 2, grid = { x = 9, y = 6 }, stream = 320 }]
+time_steps = 18

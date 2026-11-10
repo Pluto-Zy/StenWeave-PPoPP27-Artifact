@@ -1,0 +1,40 @@
+schema_version = 2
+seed = 42
+
+[defaults.run]
+warmup_runs = 0
+repeat_runs = 3
+measurement_runs = 3
+measurement_statistic = "mean"
+check = false
+cooldown_ms = 0
+
+[[case]]
+name = "box2d1r-sm80-cuda"
+[case.kernel]
+id = "6e9237bf036faa97d92c894b"
+[case.run]
+block = { x = 768 }
+domain = { x = 18064, y = 18432 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2048 }]
+time_steps = 16
+
+[[case]]
+name = "box2d1r-sm80-sass"
+[case.kernel]
+id = "01fabb62ddc986d4eef7fdfd"
+[case.run]
+block = { x = 768 }
+domain = { x = 18064, y = 18432 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2048 }]
+time_steps = 16
+
+[[case]]
+name = "box2d1r-sm80-sass-ilp"
+[case.kernel]
+id = "6d4f8a74026c1960238f9db3"
+[case.run]
+block = { x = 384 }
+domain = { x = 17972, y = 18432 }
+bands = [{ repeat = 9, grid = { x = 24 }, stream = 2048 }]
+time_steps = 18

@@ -1,0 +1,4 @@
+# Patch context lines include a required leading space, including empty lines.
+*.patch whitespace=-blank-at-eol,-blank-at-eof
+# CSV writers use CRLF line endings.
+*.csv whitespace=cr-at-eol

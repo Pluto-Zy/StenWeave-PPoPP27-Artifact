@@ -1,0 +1,63 @@
+arch = "sm90"
+repeats = 5
+statistic = "mean_sample_throughput"
+
+[stencils.box2d1r]
+dim = 2
+row = 16
+col = 64
+warps = 4
+dimensions = [10240, 10240]
+iterations = 10240
+native_work_factor = 3
+normalization_divisor = 1
+
+[stencils.star2d1r]
+dim = 2
+row = 16
+col = 64
+warps = 4
+dimensions = [10240, 10240]
+iterations = 10240
+native_work_factor = 3
+normalization_divisor = 1
+
+[stencils.star2d3r]
+dim = 2
+row = 16
+col = 64
+warps = 4
+dimensions = [10240, 10240]
+iterations = 10240
+native_work_factor = 1
+normalization_divisor = 1
+
+[stencils.box2d3r]
+dim = 2
+row = 16
+col = 64
+warps = 4
+dimensions = [10240, 10240]
+iterations = 10240
+native_work_factor = 3
+normalization_divisor = 3
+
+[stencils.star3d1r]
+dim = 3
+row = 8
+col = 64
+warps = 8
+dimensions = [1024, 1024, 1024]
+iterations = 1024
+native_work_factor = 1
+normalization_divisor = 1
+
+[stencils.box3d1r]
+dim = 3
+row = 8
+col = 64
+warps = 8
+dimensions = [1024, 1024, 1024]
+iterations = 1024
+native_work_factor = 1
+normalization_divisor = 1

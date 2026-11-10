@@ -1,0 +1,72 @@
+schema_version = 2
+
+[artifact]
+name = "ppopp27-quickcheck"
+
+[[kernels]]
+backend = "cuda"
+shape = "box"
+dimensions = 2
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 8
+minimum_overlap = 16
+launch_bounds = 768
+
+[[kernels]]
+backend = "cuda"
+shape = "box"
+dimensions = 2
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 14
+minimum_overlap = 28
+launch_bounds = 512
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 2
+arch = ["sm80"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 8
+minimum_overlap = 16
+group_size = 1
+leading_load_count = 1
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 9
+minimum_overlap = 20
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels]]
+backend = "sass"
+shape = "box"
+dimensions = 2
+arch = ["sm90"]
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 14
+minimum_overlap = 28
+group_size = 1
+leading_load_count = 2
+min_comp_stall = 1
+
+[[kernels.variants]]
+radius = 1
+time_block_size = 14
+minimum_overlap = 28
+group_size = 2
+leading_load_count = 2
+min_comp_stall = 1

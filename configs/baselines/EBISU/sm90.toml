@@ -1,0 +1,66 @@
+arch = "sm90"
+repeats = 5
+statistic = "mean_sample_throughput"
+
+[stencils.star2d1r]
+dim = 2
+radius = 1
+target = "2d5pt_ebisu.exe"
+tstep = 9
+ipts = 2
+tile_x = 32
+dimensions = [5474, 13566]
+
+[stencils.star2d2r]
+dim = 2
+radius = 2
+target = "2ds9pt_ebisu.exe"
+tstep = 7
+ipts = 2
+tile_x = 32
+dimensions = [2508, 25992]
+
+[stencils.box2d1r]
+dim = 2
+radius = 1
+target = "2d9pt_ebisu.exe"
+tstep = 7
+ipts = 6
+tile_x = 32
+dimensions = [5566, 13794]
+
+[stencils.box2d2r]
+dim = 2
+radius = 2
+target = "2d25pt_ebisu.exe"
+tstep = 4
+ipts = 6
+tile_x = 32
+dimensions = [16320, 4560]
+
+[stencils.box2d3r]
+dim = 2
+radius = 3
+target = "2d49pt_ebisu.exe"
+tstep = 2
+ipts = 6
+tile_x = 32
+dimensions = [8296, 9272]
+
+[stencils.star3d1r]
+dim = 3
+radius = 1
+target = "3d7pt_ebisu.exe"
+tstep = 9
+ipts = 4
+tile_x = 32
+dimensions = [192, 608, 2560]
+
+[stencils.box3d1r]
+dim = 3
+radius = 1
+target = "3d27pt_ebisu.exe"
+tstep = 5
+ipts = 4
+tile_x = 64
+dimensions = [384, 304, 2560]

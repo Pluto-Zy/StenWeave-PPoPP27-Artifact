@@ -1,0 +1,23 @@
+arch = "sm90"
+repeats = 5
+statistic = "mean_sample_throughput"
+
+[stencils.star3d1r]
+dim = 3
+row = 8
+col = 64
+warps = 8
+dimensions = [1024, 1024, 1024]
+iterations = 1024
+native_work_factor = 3
+normalization_divisor = 1
+
+[stencils.box3d1r]
+dim = 3
+row = 8
+col = 64
+warps = 8
+dimensions = [1024, 1024, 1024]
+iterations = 1024
+native_work_factor = 3
+normalization_divisor = 1

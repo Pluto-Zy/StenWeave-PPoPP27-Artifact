@@ -1,0 +1,10 @@
+--- a/common.h
++++ b/common.h
+@@ -111,6 +111,7 @@
+   }
+ 
+   puts("[Device warm-up]");
++  init_grid(A, compsize);
+   printf("%.4f ms\n", kernel_stencil(A, compsize, timestep, true));
+ 
+   double elapsed = 0.0f;
